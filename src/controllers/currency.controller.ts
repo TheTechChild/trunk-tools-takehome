@@ -1,5 +1,9 @@
-import type { Request, Response, NextFunction } from 'express';
+import type { Response, NextFunction } from 'express';
 import { BadRequestError } from '../errors/AppError';
+import { conversionService } from '../services/conversionService';
+import { coinbaseService } from '../services/coinbaseService';
+import type { AuthenticatedRequest } from '../middleware/authentication';
+import { SUPPORTED_CURRENCIES } from '../config/constants';
 
 /**
  * Currency conversion controller
@@ -8,31 +12,44 @@ export const currencyController = {
   /**
    * Convert between currencies
    */
-  convertCurrency: (req: Request, res: Response, next: NextFunction) => {
+  convertCurrency: async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
+      // Authentication is enforced by middleware, so we can safely assume req.user exists
+      if (!req.user || !req.user.userId) {
+        throw new BadRequestError('User not authenticated', 'USER_NOT_AUTHENTICATED');
+      }
+
       const { from, to, amount } = req.query;
 
-      // Validate required parameters
       if (!from || !to || !amount) {
         throw new BadRequestError('Missing required parameters', 'INVALID_PARAMETERS', {
           required: ['from', 'to', 'amount'],
         });
       }
 
-      // This is just a placeholder - in the final implementation
-      // we would call a service to handle the actual conversion
-      const result = {
-        from: from,
-        to: to,
-        amount: parseFloat(amount as string),
-        rate: 1.1, // Example rate
-        result: parseFloat(amount as string) * 1.1,
-        timestamp: new Date().toISOString(),
-      };
+      // Convert string parameters to appropriate types
+      const fromCurrency = String(from);
+      const toCurrency = String(to);
+      const amountValue = parseFloat(String(amount));
+
+      // Convert the currency using the service
+      const result = await conversionService.convertCurrency(
+        fromCurrency,
+        toCurrency,
+        amountValue,
+        req.user.userId
+      );
 
       res.status(200).json({
         success: true,
-        data: result,
+        data: {
+          from: result.from,
+          to: result.to,
+          amount: result.amount,
+          rate: result.rate,
+          converted_amount: result.convertedAmount,
+          timestamp: result.timestamp,
+        },
       });
     } catch (error) {
       next(error);
@@ -42,26 +59,40 @@ export const currencyController = {
   /**
    * Get latest exchange rates
    */
-  getExchangeRates: (req: Request, res: Response, next: NextFunction) => {
+  getExchangeRates: async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       const { base } = req.query;
+      
+      if (!base) {
+        throw new BadRequestError('Missing required parameter: base', 'INVALID_PARAMETERS');
+      }
 
-      // This is just a placeholder - in the final implementation
-      // we would fetch actual rates from a service
-      const rates = {
-        base: base || 'USD',
-        timestamp: new Date().toISOString(),
-        rates: {
-          EUR: 0.91,
-          GBP: 0.78,
-          JPY: 108.95,
-          AUD: 1.45,
-        },
-      };
+      const baseCurrency = String(base).toUpperCase();
+      
+      // We'll get rates for all supported currencies except the base currency
+      const targetCurrencies = SUPPORTED_CURRENCIES.filter(curr => curr !== baseCurrency);
+      
+      // Get exchange rates for each target currency
+      const ratesPromises = targetCurrencies.map(async (currency) => {
+        const { rate } = await coinbaseService.getExchangeRate(baseCurrency, currency);
+        return { currency, rate };
+      });
+      
+      const ratesResults = await Promise.all(ratesPromises);
+      
+      // Convert results to object format { USD: 1.23, BTC: 0.000123 }
+      const rates = ratesResults.reduce((acc, { currency, rate }) => {
+        acc[currency] = rate;
+        return acc;
+      }, {} as Record<string, number>);
 
       res.status(200).json({
         success: true,
-        data: rates,
+        data: {
+          base: baseCurrency,
+          timestamp: new Date().toISOString(),
+          rates,
+        },
       });
     } catch (error) {
       next(error);
@@ -71,17 +102,13 @@ export const currencyController = {
   /**
    * Get list of supported currencies
    */
-  getSupportedCurrencies: (req: Request, res: Response, next: NextFunction) => {
+  getSupportedCurrencies: (_req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
-      // This is just a placeholder - in the final implementation
-      // we would fetch the actual supported currencies from a service
-      const currencies = [
-        { code: 'USD', name: 'US Dollar' },
-        { code: 'EUR', name: 'Euro' },
-        { code: 'GBP', name: 'British Pound' },
-        { code: 'JPY', name: 'Japanese Yen' },
-        { code: 'AUD', name: 'Australian Dollar' },
-      ];
+      // Map the supported currencies to objects with name and code
+      const currencies = SUPPORTED_CURRENCIES.map(code => {
+        const name = code === 'BTC' ? 'Bitcoin' : code === 'USD' ? 'US Dollar' : code;
+        return { code, name };
+      });
 
       res.status(200).json({
         success: true,
