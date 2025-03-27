@@ -46,4 +46,4 @@ describe('Health API Integration Tests', () => {
       expect(response.body.dependencies).toHaveProperty('redis');
     });
   });
-}); 
+});

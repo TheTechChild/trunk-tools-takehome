@@ -38,9 +38,7 @@ describe('Currency API Integration Tests', () => {
 
     it('should return 400 when required parameters are missing', async () => {
       // Act
-      const response = await request(app)
-        .get('/api/v1/currency/convert')
-        .query({ from: 'USD' }); // Missing 'to' and 'amount'
+      const response = await request(app).get('/api/v1/currency/convert').query({ from: 'USD' }); // Missing 'to' and 'amount'
 
       // Assert
       expect(response.status).toBe(400);
@@ -69,9 +67,7 @@ describe('Currency API Integration Tests', () => {
 
     it('should return exchange rates with specified base currency', async () => {
       // Act
-      const response = await request(app)
-        .get('/api/v1/currency/rates')
-        .query({ base: 'EUR' });
+      const response = await request(app).get('/api/v1/currency/rates').query({ base: 'EUR' });
 
       // Assert
       expect(response.status).toBe(200);
@@ -94,4 +90,4 @@ describe('Currency API Integration Tests', () => {
       expect(response.body.data[0]).toHaveProperty('name');
     });
   });
-}); 
+});

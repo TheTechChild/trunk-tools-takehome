@@ -11,7 +11,7 @@ describe('Health Controller', () => {
     mockRequest = {};
     responseObject = {
       statusCode: 0,
-      body: {}
+      body: {},
     };
     mockResponse = {
       status: vi.fn().mockImplementation((code: number) => {
@@ -21,7 +21,7 @@ describe('Health Controller', () => {
       json: vi.fn().mockImplementation((data: any) => {
         responseObject.body = data;
         return mockResponse as Response;
-      })
+      }),
     };
   });
 
@@ -54,4 +54,4 @@ describe('Health Controller', () => {
       expect(responseObject.body.dependencies).toHaveProperty('redis');
     });
   });
-}); 
+});

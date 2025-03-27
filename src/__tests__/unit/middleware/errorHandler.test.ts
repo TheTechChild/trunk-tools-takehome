@@ -1,22 +1,39 @@
 import type { Request, Response, NextFunction } from 'express';
 import { errorHandler } from '../../../middleware/errorHandler';
-import { AppError, BadRequestError, NotFoundError, InternalServerError } from '../../../errors/AppError';
+import { BadRequestError, NotFoundError, InternalServerError } from '../../../errors/AppError';
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
+
+// Define a type for the response object
+interface ResponseObject {
+  statusCode: number;
+  body: {
+    success?: boolean;
+    error?: {
+      code?: string;
+      message?: string;
+      details?: Record<string, unknown>;
+      stack?: string;
+    };
+  };
+}
 
 describe('Error Handler Middleware', () => {
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
-  let nextFunction: NextFunction = vi.fn();
-  let responseObject: any = {};
+  const nextFunction = vi.fn() as unknown as NextFunction;
+  let responseObject: ResponseObject = {
+    statusCode: 0,
+    body: {},
+  };
 
   beforeEach(() => {
     mockRequest = {
       path: '/test-path',
-      method: 'GET'
+      method: 'GET',
     };
     responseObject = {
       statusCode: 0,
-      body: {}
+      body: {},
     };
     mockResponse = {
       status: vi.fn().mockImplementation((code) => {
@@ -26,7 +43,7 @@ describe('Error Handler Middleware', () => {
       json: vi.fn().mockImplementation((data) => {
         responseObject.body = data;
         return mockResponse;
-      })
+      }),
     };
     process.env.NODE_ENV = 'development';
   });
@@ -101,4 +118,4 @@ describe('Error Handler Middleware', () => {
     // Reset environment
     process.env.NODE_ENV = 'test';
   });
-}); 
+});

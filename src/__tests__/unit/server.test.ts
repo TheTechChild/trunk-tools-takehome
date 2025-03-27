@@ -28,7 +28,7 @@ vi.mock('../../middleware/errorHandler', () => ({
 
 describe('Server Initialization', () => {
   let originalEnv: NodeJS.ProcessEnv;
-  
+
   beforeEach(() => {
     originalEnv = { ...process.env };
     vi.clearAllMocks();
@@ -92,4 +92,4 @@ describe('Server Initialization', () => {
     // Assert
     expect(app.listen).toHaveBeenCalledWith('9000', expect.any(Function));
   });
-}); 
+});

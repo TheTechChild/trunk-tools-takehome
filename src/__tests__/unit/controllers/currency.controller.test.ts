@@ -3,19 +3,42 @@ import { currencyController } from '../../../controllers/currency.controller';
 import { BadRequestError } from '../../../errors/AppError';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+// Define a more specific type for the response object
+interface ResponseObject {
+  statusCode: number;
+  body: {
+    success?: boolean;
+    data?:
+      | {
+          from?: string;
+          to?: string;
+          amount?: number;
+          rate?: number;
+          result?: number;
+          timestamp?: number;
+          base?: string;
+          rates?: Record<string, number>;
+        }
+      | Array<{ code: string; name: string }>;
+  };
+}
+
 describe('Currency Controller', () => {
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
-  let nextFunction = vi.fn();
-  let responseObject: any = {};
+  const nextFunction = vi.fn();
+  let responseObject: ResponseObject = {
+    statusCode: 0,
+    body: {},
+  };
 
   beforeEach(() => {
     mockRequest = {
-      query: {}
+      query: {},
     };
     responseObject = {
       statusCode: 0,
-      body: {}
+      body: {},
     };
     mockResponse = {
       status: vi.fn().mockImplementation((code) => {
@@ -25,7 +48,7 @@ describe('Currency Controller', () => {
       json: vi.fn().mockImplementation((data) => {
         responseObject.body = data;
         return mockResponse;
-      })
+      }),
     };
   });
 
@@ -39,13 +62,13 @@ describe('Currency Controller', () => {
       mockRequest.query = {
         from: 'USD',
         to: 'EUR',
-        amount: '100'
+        amount: '100',
       };
 
       // Act
       currencyController.convertCurrency(
-        mockRequest as Request, 
-        mockResponse as Response, 
+        mockRequest as Request,
+        mockResponse as Response,
         nextFunction as unknown as NextFunction
       );
 
@@ -70,8 +93,8 @@ describe('Currency Controller', () => {
 
       // Act
       currencyController.convertCurrency(
-        mockRequest as Request, 
-        mockResponse as Response, 
+        mockRequest as Request,
+        mockResponse as Response,
         nextFunction as unknown as NextFunction
       );
 
@@ -79,12 +102,12 @@ describe('Currency Controller', () => {
       expect(mockResponse.status).not.toHaveBeenCalled();
       expect(mockResponse.json).not.toHaveBeenCalled();
       expect(nextFunction).toHaveBeenCalledTimes(1);
-      
+
       // Add type guard to ensure the error object exists
       const errorObj = nextFunction.mock.calls[0]?.[0];
       expect(errorObj).toBeDefined();
       expect(errorObj).toBeInstanceOf(BadRequestError);
-      
+
       // Type assertion since we've verified it exists and is a BadRequestError
       const error = errorObj as BadRequestError;
       expect(error.message).toBe('Missing required parameters');
@@ -97,13 +120,13 @@ describe('Currency Controller', () => {
     it('should return exchange rates with specified base currency', () => {
       // Arrange
       mockRequest.query = {
-        base: 'EUR'
+        base: 'EUR',
       };
 
       // Act
       currencyController.getExchangeRates(
-        mockRequest as Request, 
-        mockResponse as Response, 
+        mockRequest as Request,
+        mockResponse as Response,
         nextFunction as unknown as NextFunction
       );
 
@@ -122,8 +145,8 @@ describe('Currency Controller', () => {
 
       // Act
       currencyController.getExchangeRates(
-        mockRequest as Request, 
-        mockResponse as Response, 
+        mockRequest as Request,
+        mockResponse as Response,
         nextFunction as unknown as NextFunction
       );
 
@@ -137,8 +160,8 @@ describe('Currency Controller', () => {
     it('should return list of supported currencies', () => {
       // Act
       currencyController.getSupportedCurrencies(
-        mockRequest as Request, 
-        mockResponse as Response, 
+        mockRequest as Request,
+        mockResponse as Response,
         nextFunction as unknown as NextFunction
       );
 
@@ -152,4 +175,4 @@ describe('Currency Controller', () => {
       expect(nextFunction).not.toHaveBeenCalled();
     });
   });
-}); 
+});
