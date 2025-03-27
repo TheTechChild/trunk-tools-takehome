@@ -43,6 +43,23 @@ services:
     networks:
       - currency-network
 
+  test:
+    build:
+      context: .
+      target: builder
+    container_name: currency-test
+    environment:
+      - NODE_ENV=test
+      - MONGODB_URI=mongodb://mongodb:27017/currency-service-test
+      - REDIS_URI=redis://redis:6379
+    depends_on:
+      - mongodb
+      - redis
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: bun run test
+
 networks:
   currency-network:
     driver: bridge

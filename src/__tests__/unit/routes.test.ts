@@ -1,10 +1,11 @@
 import type { Express } from 'express';
-import { describe, expect, it, vi, beforeEach } from 'vitest';
+import { describe, expect, test, beforeEach } from 'bun:test';
+import { mock } from 'bun:test';
 import { configureRoutes } from '../../routes/index';
 
 describe('Route Registration', () => {
   let app: Express;
-  const mockUse = vi.fn();
+  const mockUse = mock();
 
   beforeEach(() => {
     // Create a mock Express app
@@ -12,10 +13,11 @@ describe('Route Registration', () => {
       use: mockUse,
     } as unknown as Express;
 
-    vi.clearAllMocks();
+    // Reset mocks between tests
+    mockUse.mockReset();
   });
 
-  it('should register health routes on the correct path', () => {
+  test('should register health routes on the correct path', () => {
     // Act
     configureRoutes(app);
 
@@ -23,7 +25,7 @@ describe('Route Registration', () => {
     expect(mockUse).toHaveBeenCalledWith('/health', expect.anything());
   });
 
-  it('should register currency routes on the correct path', () => {
+  test('should register currency routes on the correct path', () => {
     // Act
     configureRoutes(app);
 
@@ -31,13 +33,22 @@ describe('Route Registration', () => {
     expect(mockUse).toHaveBeenCalledWith('/api/v1/currency', expect.anything());
   });
 
-  it('should register all required routes', () => {
+  test('should register metrics routes on the correct path', () => {
     // Act
     configureRoutes(app);
 
     // Assert
-    expect(mockUse).toHaveBeenCalledTimes(2); // Health and currency routes
+    expect(mockUse).toHaveBeenCalledWith('/api/v1/metrics', expect.anything());
+  });
+
+  test('should register all required routes', () => {
+    // Act
+    configureRoutes(app);
+
+    // Assert
+    expect(mockUse).toHaveBeenCalledTimes(3); // Health, currency, and metrics routes
     expect(mockUse).toHaveBeenNthCalledWith(1, '/health', expect.anything());
     expect(mockUse).toHaveBeenNthCalledWith(2, '/api/v1/currency', expect.anything());
+    expect(mockUse).toHaveBeenNthCalledWith(3, '/api/v1/metrics', expect.anything());
   });
 });

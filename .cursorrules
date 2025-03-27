@@ -12,6 +12,9 @@ This project is a take-home assignment, focusing on a currency conversion servic
 - Always use ES Module syntax
 - Use vitest and the test commands located in the package.json file to run the test suite
 
+## Testing
+- Only use the bun test runner and appropriate bun test practices. Do not use jest, vitest, or any other test runner
+
 ## Analysis Process
 
 Before responding to any request, follow these steps:

@@ -1,0 +1,104 @@
+.
+├── Dockerfile
+├── README.md
+├── bun.lock
+├── commitlint.config.cjs
+├── conversations
+│   ├── current-work.md
+│   ├── development-plan.md
+│   ├── take-home-project-prd.md
+│   └── testing-considerations.md
+├── coverage
+│   ├── clover.xml
+│   ├── coverage-final.json
+│   ├── lcov-report
+│   │   ├── base.css
+│   │   ├── block-navigation.js
+│   │   ├── favicon.png
+│   │   ├── index.html
+│   │   ├── prettify.css
+│   │   ├── prettify.js
+│   │   ├── sort-arrow-sprite.png
+│   │   ├── sorter.js
+│   │   └── src
+│   │       ├── controllers
+│   │       │   ├── currency.controller.ts.html
+│   │       │   ├── health.controller.ts.html
+│   │       │   └── index.html
+│   │       ├── errors
+│   │       │   ├── AppError.ts.html
+│   │       │   └── index.html
+│   │       ├── index.html
+│   │       ├── index.ts.html
+│   │       ├── middleware
+│   │       │   ├── errorHandler.ts.html
+│   │       │   └── index.html
+│   │       └── routes
+│   │           ├── currency.routes.ts.html
+│   │           ├── health.routes.ts.html
+│   │           ├── index.html
+│   │           └── index.ts.html
+│   └── lcov.info
+├── docker-compose.yml
+├── eslint.config.js
+├── package.json
+├── src
+│   ├── __tests__
+│   │   ├── README.md
+│   │   ├── integration
+│   │   │   ├── api
+│   │   │   │   ├── currency.test.ts
+│   │   │   │   └── health.test.ts
+│   │   │   └── rate-limiting
+│   │   │       ├── api-endpoints.test.ts
+│   │   │       ├── reset-behavior.test.ts
+│   │   │       └── user-identification.test.ts
+│   │   ├── load
+│   │   │   ├── reports
+│   │   │   └── scenarios
+│   │   │       └── health-api.yml
+│   │   └── unit
+│   │       ├── controllers
+│   │       │   ├── currency.controller.test.ts
+│   │       │   └── health.controller.test.ts
+│   │       ├── middleware
+│   │       │   └── errorHandler.test.ts
+│   │       ├── routes.test.ts
+│   │       ├── server.test.ts
+│   │       ├── services
+│   │       └── utils
+│   ├── config
+│   │   ├── database.ts
+│   │   └── redis.ts
+│   ├── controllers
+│   │   ├── currency.controller.ts
+│   │   └── health.controller.ts
+│   ├── errors
+│   │   └── AppError.ts
+│   ├── index.ts
+│   ├── middleware
+│   │   ├── errorHandler.ts
+│   │   └── requestLogger.ts
+│   ├── models
+│   │   ├── requestLog.model.ts
+│   │   └── user.model.ts
+│   ├── repositories
+│   │   ├── index.ts
+│   │   ├── requestLog.repository.ts
+│   │   └── user.repository.ts
+│   ├── routes
+│   │   ├── currency.routes.ts
+│   │   ├── health.routes.ts
+│   │   └── index.ts
+│   ├── services
+│   │   ├── cache.service.ts
+│   │   ├── exchangeRate.service.ts
+│   │   └── index.ts
+│   ├── types
+│   │   ├── cache.types.ts
+│   │   ├── database.types.ts
+│   │   └── repository.types.ts
+│   └── utils
+├── tsconfig.json
+├── vitest.config.ts
+└── vitest.setup.ts
