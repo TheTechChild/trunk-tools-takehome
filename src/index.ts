@@ -1,4 +1,3 @@
-import type { Request, Response, NextFunction } from 'express';
 import express from 'express';
 import { configureRoutes } from './routes/index';
 import { errorHandler } from './middleware/errorHandler';
