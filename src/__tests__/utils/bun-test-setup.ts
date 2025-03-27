@@ -30,7 +30,7 @@ export const connectMongoDB = async (): Promise<void> => {
   try {
     // Get connection string from environment with fallback
     const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/currency-service-test';
-    
+
     console.info(`Attempting to connect to MongoDB at ${mongoUri}...`);
     await mongoose.connect(mongoUri, {
       serverSelectionTimeoutMS: 10000, // Increased timeout for Docker environments
