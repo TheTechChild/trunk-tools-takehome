@@ -50,7 +50,7 @@ services:
     container_name: currency-test
     environment:
       - NODE_ENV=test
-      - MONGODB_URI=mongodb://mongodb:27017/currency-mongodb
+      - MONGODB_URI=mongodb://mongodb:27017/currency-service-test
       - REDIS_URI=redis://redis:6379
     depends_on:
       - mongodb

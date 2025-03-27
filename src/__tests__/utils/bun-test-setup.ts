@@ -7,11 +7,18 @@ import mongoose from 'mongoose';
 import Redis from 'ioredis';
 import { afterAll, beforeAll } from 'bun:test';
 
-// Setup environment variables for tests
+// Setup environment variables for tests if not already set
 process.env.NODE_ENV = 'test';
-process.env.MONGODB_URI = 'mongodb://localhost:27017/currency-service-test';
-process.env.REDIS_HOST = 'localhost';
-process.env.REDIS_PORT = '6379';
+// Don't override existing environment variables that might be set by Docker
+if (!process.env.MONGODB_URI) {
+  process.env.MONGODB_URI = 'mongodb://localhost:27017/currency-service-test';
+}
+if (!process.env.REDIS_HOST) {
+  process.env.REDIS_HOST = 'localhost';
+}
+if (!process.env.REDIS_PORT) {
+  process.env.REDIS_PORT = '6379';
+}
 
 // Connection instances
 let redisClient: Redis | null = null;
@@ -21,37 +28,16 @@ let redisClient: Redis | null = null;
  */
 export const connectMongoDB = async (): Promise<void> => {
   try {
-    // Try different connection strings to find one that works
-    const connectionStrings = [
-      process.env.MONGODB_URI,
-      'mongodb://currency-mongodb:27017/currency-service-test', // Docker container name
-      'mongodb://localhost:27017/currency-service-test', // Local development
-      'mongodb://127.0.0.1:27017/currency-service-test', // Explicit localhost IP
-    ];
+    // Get connection string from environment with fallback
+    const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/currency-service-test';
+    
+    console.info(`Attempting to connect to MongoDB at ${mongoUri}...`);
+    await mongoose.connect(mongoUri, {
+      serverSelectionTimeoutMS: 10000, // Increased timeout for Docker environments
+      connectTimeoutMS: 10000,
+    });
 
-    let lastError: Error | null = null;
-
-    // Try each connection string
-    for (const uri of connectionStrings) {
-      if (!uri) continue;
-
-      try {
-        console.info(`Attempting to connect to MongoDB at ${uri}...`);
-        await mongoose.connect(uri, {
-          serverSelectionTimeoutMS: 3000, // Shorter timeout for faster failures
-          connectTimeoutMS: 5000,
-        });
-
-        console.info(`✅ Successfully connected to MongoDB at ${uri}`);
-        return; // Successfully connected
-      } catch (error) {
-        console.error(`❌ Failed to connect to MongoDB at ${uri}`);
-        lastError = error as Error;
-      }
-    }
-
-    // If we reach here, all connection attempts failed
-    throw lastError || new Error('Failed to connect to MongoDB after trying multiple URIs');
+    console.info(`✅ Successfully connected to MongoDB at ${mongoUri}`);
   } catch (error) {
     console.error('MongoDB connection error:', error);
     throw error;
