@@ -47,6 +47,7 @@ services:
     build:
       context: .
       target: builder
+    container_name: currency-test
     environment:
       - NODE_ENV=test
       - MONGODB_URI=mongodb://mongodb:27017/currency-mongodb
