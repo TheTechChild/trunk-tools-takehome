@@ -5,7 +5,7 @@ vi.mock('express', () => {
   // Create mock middleware functions that return middleware functions
   const json = vi.fn().mockReturnValue(vi.fn());
   const urlencoded = vi.fn().mockReturnValue(vi.fn());
-  
+
   // Create app mock
   const app = {
     use: vi.fn(),
@@ -14,7 +14,7 @@ vi.mock('express', () => {
       return app;
     }),
   };
-  
+
   // Return the mock structure
   return {
     default: vi.fn(() => app),

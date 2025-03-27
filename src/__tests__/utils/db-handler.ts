@@ -10,7 +10,7 @@ let mongoServer: MongoMemoryServer;
 export const connect = async (): Promise<void> => {
   mongoServer = await MongoMemoryServer.create();
   const uri = mongoServer.getUri();
-  
+
   await mongoose.connect(uri);
 };
 
@@ -41,4 +41,4 @@ export const clearDatabase = async (): Promise<void> => {
  */
 export const resetMocks = (): void => {
   vi.resetAllMocks();
-}; 
+};
