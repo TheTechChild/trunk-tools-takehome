@@ -40,11 +40,20 @@
 │   │           └── index.ts.html
 │   └── lcov.info
 ├── docker-compose.yml
+├── docs
+│   ├── caching.md
+│   ├── data-access-layer.md
+│   ├── database.md
+│   ├── env-variables.md
+│   └── logging.md
 ├── eslint.config.js
 ├── package.json
 ├── src
 │   ├── __tests__
 │   │   ├── README.md
+│   │   ├── hello-world
+│   │   │   ├── connection-check.test.ts
+│   │   │   └── hello-world.test.ts
 │   │   ├── integration
 │   │   │   ├── api
 │   │   │   │   ├── currency.test.ts
@@ -57,22 +66,30 @@
 │   │   │   ├── reports
 │   │   │   └── scenarios
 │   │   │       └── health-api.yml
-│   │   └── unit
-│   │       ├── controllers
-│   │       │   ├── currency.controller.test.ts
-│   │       │   └── health.controller.test.ts
-│   │       ├── middleware
-│   │       │   └── errorHandler.test.ts
-│   │       ├── routes.test.ts
-│   │       ├── server.test.ts
-│   │       ├── services
-│   │       └── utils
+│   │   ├── mocks
+│   │   │   └── redis.ts
+│   │   ├── unit
+│   │   │   ├── controllers
+│   │   │   │   ├── currency.controller.test.ts
+│   │   │   │   ├── health.controller.test.ts
+│   │   │   │   └── middleware
+│   │   │   ├── middleware
+│   │   │   │   └── errorHandler.test.ts
+│   │   │   ├── routes.test.ts
+│   │   │   ├── server.test.ts
+│   │   │   ├── services
+│   │   │   └── utils
+│   │   └── utils
+│   │       ├── bun-test-setup.ts
+│   │       ├── db-handler.ts
+│   │       └── redis-mock.ts
 │   ├── config
 │   │   ├── database.ts
 │   │   └── redis.ts
 │   ├── controllers
 │   │   ├── currency.controller.ts
-│   │   └── health.controller.ts
+│   │   ├── health.controller.ts
+│   │   └── metrics.controller.ts
 │   ├── errors
 │   │   └── AppError.ts
 │   ├── index.ts
@@ -89,7 +106,9 @@
 │   ├── routes
 │   │   ├── currency.routes.ts
 │   │   ├── health.routes.ts
-│   │   └── index.ts
+│   │   ├── index.ts
+│   │   └── metrics.routes.ts
+│   ├── scripts
 │   ├── services
 │   │   ├── cache.service.ts
 │   │   ├── exchangeRate.service.ts
@@ -99,6 +118,4 @@
 │   │   ├── database.types.ts
 │   │   └── repository.types.ts
 │   └── utils
-├── tsconfig.json
-├── vitest.config.ts
-└── vitest.setup.ts
+└── tsconfig.json
