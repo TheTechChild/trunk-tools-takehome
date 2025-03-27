@@ -5,6 +5,7 @@ This document outlines the testing approach for the Currency Conversion Service,
 ## Overview
 
 Our testing strategy follows the testing pyramid approach:
+
 - **Unit Tests**: Testing individual components in isolation
 - **Integration Tests**: Testing interactions between components
 - **Load Tests**: Testing performance under high traffic
@@ -30,16 +31,19 @@ src/__tests__/
 ## Running Tests
 
 ### Unit Tests
+
 ```bash
 bun run test:unit
 ```
 
 ### Integration Tests
+
 ```bash
 bun run test:integration
 ```
 
 ### Load Tests
+
 ```bash
 # Start the server first
 bun run dev
@@ -52,6 +56,7 @@ bun run test:load:report
 ```
 
 ### All Tests with Coverage
+
 ```bash
 bun run test:coverage
 ```
@@ -61,22 +66,26 @@ bun run test:coverage
 ### 1. Unit Tests
 
 - **Exchange Rate Calculation**
+
   - Test BTC → USD conversion correctly
   - Test decimal precision handling
   - Test error handling for unsupported currencies
 
 - **Redis Caching Logic**
+
   - Test cache retrieval when fresh (<10 minutes old)
   - Test cache bypass when stale
   - Test Coinbase API fallback
 
 - **Rate Limiting Enforcement**
+
   - Test weekday limits (100 requests)
   - Test weekend limits (200 requests)
   - Test midnight UTC reset
   - Test HTTP 429 response
 
 - **MongoDB Request Logging**
+
   - Test successful request logging
   - Test metadata accuracy
   - Test log retention
@@ -88,14 +97,17 @@ bun run test:coverage
 ### 2. Integration Tests
 
 - **Full Currency Conversion Flow**
+
   - Test end-to-end with DB logging and caching
 
 - **API Resilience**
+
   - Test Coinbase API failure handling
   - Test Redis downtime handling
   - Test MongoDB downtime handling
 
 - **Rate Limiting Behavior**
+
   - Test multiple requests over time
   - Test reset behavior
 
@@ -106,6 +118,7 @@ bun run test:coverage
 ### 3. Load Tests
 
 - **High Traffic Testing**
+
   - Test 10,000 concurrent users
   - Test response time (<500ms for 95%)
   - Test cache efficiency
@@ -117,10 +130,12 @@ bun run test:coverage
 ## CI Integration
 
 Tests are automatically run on GitHub Actions for:
+
 - Pull requests to main branch
 - Pushes to main branch
 
 The workflow includes:
+
 - Linting
 - Unit tests
 - Integration tests
@@ -130,4 +145,4 @@ The workflow includes:
 
 - **MongoDB**: Using mongodb-memory-server for in-memory testing
 - **Redis**: Using redis-mock for unit tests
-- **External APIs**: Using Vitest mocks 
+- **External APIs**: Using Vitest mocks

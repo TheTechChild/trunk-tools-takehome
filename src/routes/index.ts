@@ -8,7 +8,7 @@ import currencyRoutes from './currency.routes';
 export const configureRoutes = (app: Express): void => {
   // Health check routes
   app.use('/health', healthRoutes);
-  
+
   // API v1 routes
   app.use('/api/v1/currency', currencyRoutes);
-}; 
+};

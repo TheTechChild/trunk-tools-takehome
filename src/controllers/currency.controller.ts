@@ -11,14 +11,12 @@ export const currencyController = {
   convertCurrency: (req: Request, res: Response, next: NextFunction) => {
     try {
       const { from, to, amount } = req.query;
-      
+
       // Validate required parameters
       if (!from || !to || !amount) {
-        throw new BadRequestError(
-          'Missing required parameters',
-          'INVALID_PARAMETERS',
-          { required: ['from', 'to', 'amount'] }
-        );
+        throw new BadRequestError('Missing required parameters', 'INVALID_PARAMETERS', {
+          required: ['from', 'to', 'amount'],
+        });
       }
 
       // This is just a placeholder - in the final implementation
@@ -29,12 +27,12 @@ export const currencyController = {
         amount: parseFloat(amount as string),
         rate: 1.1, // Example rate
         result: parseFloat(amount as string) * 1.1,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
-      
+
       res.status(200).json({
         success: true,
-        data: result
+        data: result,
       });
     } catch (error) {
       next(error);
@@ -47,7 +45,7 @@ export const currencyController = {
   getExchangeRates: (req: Request, res: Response, next: NextFunction) => {
     try {
       const { base } = req.query;
-      
+
       // This is just a placeholder - in the final implementation
       // we would fetch actual rates from a service
       const rates = {
@@ -57,13 +55,13 @@ export const currencyController = {
           EUR: 0.91,
           GBP: 0.78,
           JPY: 108.95,
-          AUD: 1.45
-        }
+          AUD: 1.45,
+        },
       };
-      
+
       res.status(200).json({
         success: true,
-        data: rates
+        data: rates,
       });
     } catch (error) {
       next(error);
@@ -82,15 +80,15 @@ export const currencyController = {
         { code: 'EUR', name: 'Euro' },
         { code: 'GBP', name: 'British Pound' },
         { code: 'JPY', name: 'Japanese Yen' },
-        { code: 'AUD', name: 'Australian Dollar' }
+        { code: 'AUD', name: 'Australian Dollar' },
       ];
-      
+
       res.status(200).json({
         success: true,
-        data: currencies
+        data: currencies,
       });
     } catch (error) {
       next(error);
     }
-  }
-}; 
+  },
+};

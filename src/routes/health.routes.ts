@@ -9,4 +9,4 @@ router.get('/', healthController.getStatus);
 // GET /health/detailed - Detailed health check that includes database and external service dependencies
 router.get('/detailed', healthController.getDetailedStatus);
 
-export default router; 
+export default router;

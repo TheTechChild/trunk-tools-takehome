@@ -21,7 +21,7 @@ export const errorHandler = (
     path: req.path,
     method: req.method,
     ...(err instanceof AppError ? { details: err.details } : {}),
-    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
   });
 
   res.status(statusCode).json({
@@ -30,7 +30,7 @@ export const errorHandler = (
       code: errorCode,
       message,
       ...(err instanceof AppError && err.details ? { details: err.details } : {}),
-      ...(process.env.NODE_ENV === 'development' ? { stack: err.stack } : {})
-    }
+      ...(process.env.NODE_ENV === 'development' ? { stack: err.stack } : {}),
+    },
   });
-}; 
+};

@@ -11,7 +11,7 @@ export const healthController = {
     res.status(200).json({
       status: 'ok',
       timestamp: new Date().toISOString(),
-      service: 'currency-conversion-service'
+      service: 'currency-conversion-service',
     });
   },
 
@@ -32,22 +32,22 @@ export const healthController = {
         dependencies: {
           database: {
             status: 'ok',
-            responseTime: 10 // example value in ms
+            responseTime: 10, // example value in ms
           },
           redis: {
             status: 'ok',
-            responseTime: 5 // example value in ms
-          }
-        }
+            responseTime: 5, // example value in ms
+          },
+        },
       };
 
       res.status(200).json(health);
-    } catch (error) {
+    } catch {
       res.status(500).json({
         status: 'error',
         timestamp: new Date().toISOString(),
-        error: 'Failed to retrieve health details'
+        error: 'Failed to retrieve health details',
       });
     }
-  }
-}; 
+  },
+};
