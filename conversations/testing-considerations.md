@@ -6,7 +6,7 @@ A **Dockerized** Node.js & Express currency conversion API that integrates **Coi
 
 ## **Testing Requirements**
 
-All functionality must be **covered by automated tests** using **Jest + Supertest** for API testing and **Redis/MongoDB mocks** to simulate real-world conditions.
+All functionality must be **covered by automated tests** using **Bun test runner** for API testing and **Redis/MongoDB mocks** to simulate real-world conditions.
 
 ### **1. Unit Tests**
 

@@ -25,10 +25,21 @@ The Currency Conversion Service requires the following environment variables:
 
 - `RATE_LIMIT_WINDOW_MS`: Time window for rate limiting in milliseconds (default: 60000)
 - `RATE_LIMIT_MAX_REQUESTS`: Maximum requests per window (default: 100)
+- `RATE_LIMIT_WEEKDAY`: Maximum requests per day on weekdays (default: 100)
+- `RATE_LIMIT_WEEKEND`: Maximum requests per day on weekends (default: 200)
 
-### API Keys (for Phase 3)
+### Precision Settings
 
-- `CURRENCY_API_KEY`: API key for external currency service
+- `DECIMAL_PRECISION_BTC`: Number of decimal places for BTC (default: 8)
+- `DECIMAL_PRECISION_USD`: Number of decimal places for USD (default: 2)
+
+### Maximum Amounts
+
+- `MAX_AMOUNT_BTC`: Maximum BTC amount for conversions (default: 1000)
+
+### Coinbase API
+
+- `COINBASE_API_URL`: Base URL for Coinbase API (default: https://api.coinbase.com/v2)
 
 ## Example .env File
 
@@ -46,9 +57,18 @@ REDIS_URI=redis://localhost:6379
 # Rate Limiting
 RATE_LIMIT_WINDOW_MS=60000
 RATE_LIMIT_MAX_REQUESTS=100
+RATE_LIMIT_WEEKDAY=100
+RATE_LIMIT_WEEKEND=200
 
-# API Keys (for production these should be securely stored)
-CURRENCY_API_KEY=your_api_key_here
+# Precision Settings
+DECIMAL_PRECISION_BTC=8
+DECIMAL_PRECISION_USD=2
+
+# Maximum Amounts
+MAX_AMOUNT_BTC=1000
+
+# Coinbase API
+COINBASE_API_URL=https://api.coinbase.com/v2
 ```
 
 ## Environment-Specific Configuration
@@ -75,4 +95,6 @@ REDIS_URI=redis://redis:6379
 NODE_ENV=production
 MONGODB_URI=mongodb://user:password@production-db:27017/currency-service?authSource=admin
 REDIS_URI=redis://:password@production-redis:6379
+RATE_LIMIT_WEEKDAY=50
+RATE_LIMIT_WEEKEND=100
 ```
