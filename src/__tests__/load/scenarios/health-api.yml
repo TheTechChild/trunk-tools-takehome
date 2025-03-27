@@ -1,0 +1,36 @@
+config:
+  target: "http://localhost:8000"
+  phases:
+    - duration: 30
+      arrivalRate: 5
+      rampTo: 20
+      name: "Warm up phase"
+    - duration: 60
+      arrivalRate: 20
+      name: "Sustained load"
+  defaults:
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+
+scenarios:
+  - name: "Health check endpoints"
+    flow:
+      - get:
+          url: "/health"
+          expect:
+            - statusCode: 200
+            - contentType: "application/json"
+            - hasProperty: "status"
+            - equals:
+                - "$.status"
+                - "ok"
+      
+      - think: 1
+      
+      - get:
+          url: "/health/detailed"
+          expect:
+            - statusCode: 200
+            - contentType: "application/json"
+            - hasProperty: "dependencies" 

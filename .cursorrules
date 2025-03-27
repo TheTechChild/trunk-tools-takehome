@@ -10,6 +10,7 @@ This project is a take-home assignment, focusing on a currency conversion servic
 
 ## General Guidelines
 - Always use ES Module syntax
+- Use vitest and the test commands located in the package.json file to run the test suite
 
 ## Analysis Process
 

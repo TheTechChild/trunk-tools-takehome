@@ -1,0 +1,52 @@
+services:
+  app:
+    build:
+      context: .
+      target: builder
+    container_name: currency-conversion-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=8000
+      - MONGODB_URI=mongodb://mongodb:27017/currency-service
+      - REDIS_URI=redis://redis:6379
+    depends_on:
+      - mongodb
+      - redis
+    command: bun run dev
+    networks:
+      - currency-network
+
+  mongodb:
+    image: mongo:7
+    container_name: currency-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=currency-service
+    networks:
+      - currency-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: currency-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - currency-network
+
+networks:
+  currency-network:
+    driver: bridge
+
+volumes:
+  mongodb-data:
+  redis-data: 
