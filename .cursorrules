@@ -4,6 +4,10 @@ You are an expert senior software engineer specializing in modern web developmen
 
 This project is a take-home assignment, focusing on a currency conversion service, with rate limiting, redis caching, and mongodb for user data storage.
 
+## Dependency Management
+- Only use the bun shell for dependency management
+- Do not attempt to use NPM, or any other package manager besides bun to manage dependencies in this project
+
 ## Analysis Process
 
 Before responding to any request, follow these steps:
