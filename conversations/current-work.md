@@ -1,129 +1,128 @@
-# Development Plan for Phase 1: Project Setup & Core Infrastructure
-
-Based on our development plan, here's a structured plan for Phase 1 implementation using the development plan issue template format:
+# Development Plan for Phase 2: Database & Caching Implementation
 
 ## Development Plan Issue
 
 ### Overview
 
-Phase 1 focuses on establishing the core infrastructure for the Currency Conversion Service, including TypeScript setup, Express server configuration, Docker environment setup, error handling implementation, and development environment configuration with hot reloading.
+Phase 2 focuses on implementing the data persistence and caching layers for the Currency Conversion Service. This includes setting up MongoDB for user data and request logs, implementing Redis for caching and rate limiting, and creating the necessary data access patterns to interact with these services.
 
 ### Planned Work
 
-- [ ] Task 1: Initialize project with TypeScript
+- [ ] Task 1: Set up MongoDB connection and schemas
+  - Description: Establish connection to MongoDB, define Mongoose/TypeORM schemas for users and request logs
+  - Dependencies: Phase 1 (Project Setup & Core Infrastructure)
+  - Estimated effort: 2 days
+  - Acceptance criteria: 
+    - MongoDB connection is established with proper error handling
+    - User schema matches requirements from development plan
+    - Request log schema captures all necessary fields
+    - Database operations are properly typed
+    - Connection pooling is configured for optimal performance
 
-  - Description: Set up TypeScript configuration with proper compiler options, type definitions, and directory structure
-  - Dependencies: None (Phase 0 has been completed)
-  - Estimated effort: 1 day
-  - Acceptance criteria:
-    - TypeScript configuration is in place with appropriate settings for a Node.js/Express project
-    - Project structure follows best practices with clear separation of concerns
-    - Type definitions for all external libraries are installed
-
-- [ ] Task 2: Set up Express server with basic routing
-
-  - Description: Create an Express application with route structure and middleware configuration
-  - Dependencies: TypeScript setup
+- [ ] Task 2: Implement Redis connection and caching logic
+  - Description: Set up Redis client, implement basic caching mechanisms and key management
+  - Dependencies: Phase 1
   - Estimated effort: 2 days
   - Acceptance criteria:
-    - Express server starts and listens on configured port
-    - Basic routing structure is implemented following REST principles
-    - Health check endpoint is available
-    - Middleware for request parsing and validation is configured
+    - Redis connection is established with proper error handling
+    - Cache operations (get, set, expire) are implemented
+    - TTL (Time to Live) management is in place
+    - Connection pooling is configured for optimal performance
+    - Graceful degradation when Redis is unavailable
 
-- [ ] Task 3: Configure Docker environment
-
-  - Description: Create Docker and docker-compose configurations for development and production
-  - Dependencies: Express server setup
+- [ ] Task 3: Create data access layer for users and logs
+  - Description: Implement repository/service pattern for database access
+  - Dependencies: MongoDB connection and schemas
   - Estimated effort: 2 days
   - Acceptance criteria:
-    - Dockerfile optimized for Node.js applications with proper layering
-    - Docker compose setup for the application, MongoDB, and Redis services
-    - Environment variables configured correctly
-    - Volumes set up for data persistence
-    - Network configuration allows services to communicate
+    - User repository implements CRUD operations
+    - Request log repository implements query and create operations
+    - Data access is abstracted behind interfaces
+    - Type safety is ensured throughout the data layer
+    - Unit tests verify correct behavior
 
-- [ ] Task 4: Implement basic error handling
+- [ ] Task 4: Implement exchange rate caching strategy
+  - Description: Develop caching strategy for exchange rates with proper invalidation
+  - Dependencies: Redis connection implementation
+  - Estimated effort: 2 days
+  - Acceptance criteria:
+    - Exchange rates are cached with 10-minute TTL
+    - Cache key structure follows the specified format
+    - Cache refresh logic is implemented
+    - Stale-while-revalidate pattern implemented for performance
+    - Metrics for cache hit/miss rates are available
 
-  - Description: Create a robust error handling system that captures and formats errors appropriately
-  - Dependencies: Express server setup
+- [ ] Task 5: Add request logging functionality
+  - Description: Implement middleware for logging API requests to MongoDB
+  - Dependencies: Data access layer for logs
   - Estimated effort: 1 day
   - Acceptance criteria:
-    - Custom error classes defined for different error types
-    - Global error handling middleware implemented
-    - Errors are formatted consistently in API responses
-    - Error logging is configured
-
-- [ ] Task 5: Set up development environment with hot reloading
-  - Description: Configure development tooling for efficient development workflow
-  - Dependencies: Docker environment, Express server
-  - Estimated effort: 1 day
-  - Acceptance criteria:
-    - Hot reloading is configured to automatically restart server on code changes
-    - Development mode provides helpful debugging information
-    - Development tools (like nodemon or Bun's watch mode) are properly configured
-    - Debugging configuration is available
+    - All API requests are logged to MongoDB
+    - Logged information includes user, currencies, amounts, timestamp
+    - Logging is non-blocking (doesn't affect response time)
+    - Error handling ensures failed logging doesn't break the API
+    - Sensitive information is properly handled
 
 ### Implementation Plan
 
-1. [ ] Step 1: Initialize TypeScript project and configure Express
+1. [ ] Step 1: Database connection and schema setup
+   - Technical approach: Use Mongoose/TypeORM to create connection pools and define schemas
+   - Potential challenges: Schema design for optimal query performance
+   - Mitigation strategies: Use indexes for frequently queried fields, implement pagination for logs
 
-   - Technical approach: Use Bun to initialize the project with TypeScript support, configure tsconfig.json for Node.js, set up Express with middleware
-   - Potential challenges: Ensuring TypeScript types are correctly set up for all libraries
-   - Mitigation strategies: Use @types packages and create custom type definitions when needed
+2. [ ] Step 2: Redis implementation and caching strategy
+   - Technical approach: Use ioredis/redis-om for Redis operations, implement caching layer with proper abstraction
+   - Potential challenges: Handling Redis connection failures gracefully
+   - Mitigation strategies: Implement circuit breaker pattern, fallback to direct API calls
 
-2. [ ] Step 2: Create Docker configuration
-
-   - Technical approach: Create multi-stage Dockerfile for optimized builds, set up docker-compose for services
-   - Potential challenges: Managing environment variables across different environments
-   - Mitigation strategies: Use .env files for local development and Docker secrets for production
-
-3. [ ] Step 3: Implement error handling and development environment
-   - Technical approach: Create error handling middleware, implement custom error classes, set up Bun's watch mode
-   - Potential challenges: Ensuring all errors are properly caught and handled
-   - Mitigation strategies: Add comprehensive testing for error scenarios
+3. [ ] Step 3: Data access layer and logging implementation
+   - Technical approach: Repository pattern for data access, middleware for request logging
+   - Potential challenges: Ensuring performance under high load
+   - Mitigation strategies: Batch inserts for logs, use write-behind caching pattern
 
 ### Testing Strategy
 
 - Unit tests needed:
-
-  - Express server initialization tests
-  - Route registration tests
-  - Error handling middleware tests
-  - Configuration loading tests
+  - MongoDB connection and model validation
+  - Redis caching operations
+  - Repository method tests
+  - Cache invalidation tests
+  - Request logging middleware tests
 
 - Integration tests needed:
-
-  - Basic API health check endpoint
-  - Docker container startup and communication
+  - Database and Redis connection with Docker services
+  - End-to-end request logging flow
+  - Cache hit/miss scenarios
+  - Database query performance
 
 - Performance considerations:
-  - Ensure fast startup time for development environment
-  - Optimize Docker build time and image size
+  - Measure cache hit rates
+  - Monitor database query performance
+  - Ensure non-blocking logging
 
 ### Documentation Requirements
 
-- [ ] Project structure documentation
-- [ ] Setup instructions for local development
-- [ ] Docker environment documentation
-- [ ] API endpoint documentation (initial structure)
+- [ ] Database schema documentation
+- [ ] Redis caching strategy documentation
+- [ ] Data access layer API documentation
+- [ ] Environment variable configuration for database connections
+- [ ] Logging format and retention policy documentation
 
 ### Timeline
 
-- Start date: [Current date]
+- Start date: [After Phase 1 completion]
 - Target completion: 1 week from start date
-- Dependencies on other issues: None (follows completion of Phase 0)
+- Dependencies on other issues: Requires successful completion of Phase 1
 
 ### Success Criteria
 
-1. [ ] Developer can run `bun run dev` and server starts with hot reloading
-2. [ ] Docker containers for app, MongoDB, and Redis start successfully with `docker-compose up`
-3. [ ] Basic API endpoints return appropriate responses
-4. [ ] Server handles errors gracefully with appropriate HTTP status codes
-5. [ ] All planned tests pass successfully
+1. [ ] MongoDB successfully stores user and request log data
+2. [ ] Redis caches exchange rates with proper TTL
+3. [ ] Data access layer provides clean API for database operations
+4. [ ] All API requests are properly logged
+5. [ ] System degrades gracefully when Redis is unavailable
+6. [ ] All tests pass successfully
 
 ### Additional Context
 
-This phase establishes the foundation for all subsequent development. It's crucial to get these elements right as they will be built upon in later phases. The TypeScript configuration, Express setup, and Docker environment will be used throughout the project.
-
-Would you like me to make any adjustments to this development plan or would you like to proceed with creating an issue based on this template?
+Phase 2 establishes the data foundation for the application. The caching strategy will be critical for meeting the sub-500ms response time requirement for 95% of requests. The database schema and access patterns established here will be used throughout the remainder of the project.
