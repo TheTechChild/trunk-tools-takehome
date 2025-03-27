@@ -80,7 +80,7 @@ try {
   const newUser = await userRepository.create({
     email: 'user@example.com',
   });
-  console.log('User created:', newUser);
+  console.info('User created:', newUser);
 } catch (error) {
   console.error('Error creating user:', error);
 }
@@ -102,7 +102,7 @@ try {
     exchange_rate: 45260.08,
     timestamp: new Date(),
   });
-  console.log('Request logged:', log);
+  console.info('Request logged:', log);
 } catch (error) {
   console.error('Error logging request:', error);
 }
@@ -116,7 +116,7 @@ import { requestLogRepository } from '../repositories';
 // Get a user's conversion history (most recent 20)
 try {
   const logs = await requestLogRepository.findByUserId('user-123', 20, 0);
-  console.log('Conversion history:', logs);
+  console.info('Conversion history:', logs);
 } catch (error) {
   console.error('Error getting conversion history:', error);
 }

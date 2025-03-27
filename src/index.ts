@@ -7,6 +7,7 @@ import { initializeRedis } from './config/redis';
 
 const app = express();
 const port = process.env.PORT || 8000;
+console.info('HELLO WORLD');
 
 // Connect to MongoDB
 connectToDatabase().catch((error) => {

@@ -1,38 +1,65 @@
 import { vi } from 'vitest';
 import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-
-let mongoServer: MongoMemoryServer;
 
 /**
- * Connect to the in-memory database
+ * Connect to the MongoDB database container
  */
 export const connect = async (): Promise<void> => {
-  mongoServer = await MongoMemoryServer.create();
-  const uri = mongoServer.getUri();
+  try {
+    // Use the MongoDB container defined in docker-compose
+    const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/currency-service-test';
 
-  await mongoose.connect(uri);
+    await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 5000, // 5 seconds
+      connectTimeoutMS: 10000, // 10 seconds
+      socketTimeoutMS: 15000, // 15 seconds
+    });
+
+    console.info('✅ Connected to MongoDB container at:', uri);
+  } catch (error) {
+    console.error('❌ Failed to connect to MongoDB:', error);
+    throw error; // Re-throw to fail tests if connection fails
+  }
 };
 
 /**
- * Close the database connection and stop the in-memory server
+ * Close the database connection
  */
 export const closeDatabase = async (): Promise<void> => {
-  await mongoose.connection.dropDatabase();
-  await mongoose.connection.close();
-  await mongoServer.stop();
+  try {
+    if (mongoose.connection.readyState !== 0) {
+      await mongoose.connection.close();
+      console.info('✅ MongoDB connection closed');
+    }
+  } catch (error) {
+    console.error('❌ Error closing database connection:', error);
+  }
 };
 
 /**
  * Clear all collections
  */
 export const clearDatabase = async (): Promise<void> => {
-  const collections = mongoose.connection.collections;
-  for (const key in collections) {
-    const collection = collections[key];
-    if (collection) {
-      await collection.deleteMany({});
+  try {
+    const collections = mongoose.connection.collections;
+
+    // Use a dedicated test database to minimize the risk of data loss
+    if (!process.env.MONGODB_URI?.includes('test')) {
+      console.error(
+        '❌ Refusing to clear non-test database. Ensure your MONGODB_URI contains "test"'
+      );
+      return;
     }
+
+    for (const key in collections) {
+      const collection = collections[key];
+      if (collection) {
+        await collection.deleteMany({});
+      }
+    }
+    console.info('✅ Database collections cleared');
+  } catch (error) {
+    console.error('❌ Error clearing database:', error);
   }
 };
 
