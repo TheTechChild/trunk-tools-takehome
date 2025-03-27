@@ -21,10 +21,27 @@ export class ExchangeRateService {
       const cachedRate = await this.getRateFromCache(cacheKey);
       
       if (cachedRate) {
+        // Return cached data immediately
+        const cachedTimestamp = new Date(cachedRate.timestamp);
+        const currentTime = new Date();
+        
+        // Check if the cache is getting stale (>75% of TTL elapsed)
+        const cacheAge = currentTime.getTime() - cachedTimestamp.getTime();
+        const staleTreshold = this.DEFAULT_TTL * 1000 * 0.75; // 75% of TTL in ms
+        
+        // If cache is getting stale, refresh in background
+        if (cacheAge > staleTreshold) {
+          // Don't await - refresh in background
+          this.refreshCache(fromCurrency, toCurrency)
+            .catch(error => {
+              console.error(`Background refresh failed for ${fromCurrency}-${toCurrency}:`, error);
+            });
+        }
+        
         return cachedRate.exchange_rate;
       }
       
-      // Not in cache or stale, fetch from external API
+      // Not in cache, fetch from external API
       const exchangeRate = await this.fetchRateFromExternalAPI(fromCurrency, toCurrency);
       
       // Cache the new rate

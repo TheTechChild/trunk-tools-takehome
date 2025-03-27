@@ -12,8 +12,6 @@ const mongooseOptions = {
   serverSelectionTimeoutMS: 5000,
   // Retries 5 times before failing
   retryReads: true,
-  // Enable automatic reconnection
-  autoReconnect: true,
 };
 
 /**
