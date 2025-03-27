@@ -62,9 +62,12 @@ describe('Error Handler Middleware', () => {
     // Assert
     expect(mockResponse.status).toHaveBeenCalledWith(400);
     expect(responseObject.body.success).toBe(false);
-    expect(responseObject.body.error.code).toBe('VALIDATION_ERROR');
-    expect(responseObject.body.error.message).toBe('Invalid input');
-    expect(responseObject.body.error.details).toEqual({ field: 'amount' });
+    expect(responseObject.body.error).toBeDefined();
+    if (responseObject.body.error) {
+      expect(responseObject.body.error.code).toBe('VALIDATION_ERROR');
+      expect(responseObject.body.error.message).toBe('Invalid input');
+      expect(responseObject.body.error.details).toEqual({ field: 'amount' });
+    }
   });
 
   it('should handle NotFoundError correctly', () => {
@@ -76,7 +79,10 @@ describe('Error Handler Middleware', () => {
 
     // Assert
     expect(mockResponse.status).toHaveBeenCalledWith(404);
-    expect(responseObject.body.error.code).toBe('RESOURCE_NOT_FOUND');
+    expect(responseObject.body.error).toBeDefined();
+    if (responseObject.body.error) {
+      expect(responseObject.body.error.code).toBe('RESOURCE_NOT_FOUND');
+    }
   });
 
   it('should handle regular Error as InternalServerError', () => {
@@ -88,8 +94,11 @@ describe('Error Handler Middleware', () => {
 
     // Assert
     expect(mockResponse.status).toHaveBeenCalledWith(500);
-    expect(responseObject.body.error.code).toBe('INTERNAL_SERVER_ERROR');
-    expect(responseObject.body.error.message).toBe('Something went wrong');
+    expect(responseObject.body.error).toBeDefined();
+    if (responseObject.body.error) {
+      expect(responseObject.body.error.code).toBe('INTERNAL_SERVER_ERROR');
+      expect(responseObject.body.error.message).toBe('Something went wrong');
+    }
   });
 
   it('should include stack trace in development mode', () => {
@@ -101,7 +110,10 @@ describe('Error Handler Middleware', () => {
     errorHandler(error, mockRequest as Request, mockResponse as Response, nextFunction);
 
     // Assert
-    expect(responseObject.body.error).toHaveProperty('stack');
+    expect(responseObject.body.error).toBeDefined();
+    if (responseObject.body.error) {
+      expect(responseObject.body.error).toHaveProperty('stack');
+    }
   });
 
   it('should not include stack trace in production mode', () => {
@@ -113,7 +125,10 @@ describe('Error Handler Middleware', () => {
     errorHandler(error, mockRequest as Request, mockResponse as Response, nextFunction);
 
     // Assert
-    expect(responseObject.body.error).not.toHaveProperty('stack');
+    expect(responseObject.body.error).toBeDefined();
+    if (responseObject.body.error) {
+      expect(responseObject.body.error).not.toHaveProperty('stack');
+    }
 
     // Reset environment
     process.env.NODE_ENV = 'test';
