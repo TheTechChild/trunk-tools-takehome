@@ -45,9 +45,47 @@ jobs:
       - name: Generate coverage report
         run: bun run test:coverage
       
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+      - name: Generate Coverage Summary
+        run: |
+          echo "# Code Coverage Report" >> $GITHUB_STEP_SUMMARY
+          echo "## Summary" >> $GITHUB_STEP_SUMMARY
+          echo "| Category | Files | % Stmts | % Branch | % Funcs | % Lines | Uncovered Lines |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-------|---------|----------|---------|---------|-----------------|" >> $GITHUB_STEP_SUMMARY
+          
+          # Extract coverage data from the JSON report
+          # This handles the v8 coverage format
+          if [ -f "coverage/coverage-final.json" ]; then
+            node -e '
+              const fs = require("fs");
+              const coverage = JSON.parse(fs.readFileSync("./coverage/coverage-final.json", "utf8"));
+              
+              let totalStatements = 0;
+              let totalCovered = 0;
+              let totalFiles = 0;
+              
+              for (const file in coverage) {
+                totalFiles++;
+                const data = coverage[file];
+                for (const line in data.statementMap) {
+                  totalStatements++;
+                  if (data.s[line] > 0) {
+                    totalCovered++;
+                  }
+                }
+              }
+              
+              const percent = totalStatements > 0 ? (totalCovered / totalStatements * 100).toFixed(2) : "100.00";
+              console.log(`| Total | ${totalFiles} | ${percent}% | N/A | N/A | ${percent}% | - |`);
+            ' >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Details" >> $GITHUB_STEP_SUMMARY
+          echo "For detailed coverage information, check the coverage directory in the workflow artifacts." >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload Coverage Report as Artifact
+        uses: actions/upload-artifact@v3
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./coverage/
-          fail_ci_if_error: false 
+          name: coverage-report
+          path: ./coverage/
+          retention-days: 7 

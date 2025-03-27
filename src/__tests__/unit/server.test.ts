@@ -1,8 +1,4 @@
-import express from 'express';
-import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { configureRoutes } from '../../routes/index';
-import { errorHandler } from '../../middleware/errorHandler';
-
+import { vi } from 'vitest';
 // Mock express listen function
 vi.mock('express', () => {
   const app = {
@@ -15,6 +11,12 @@ vi.mock('express', () => {
     urlencoded: vi.fn(),
   };
 });
+
+import express from 'express';
+import { describe, expect, it, beforeEach } from 'vitest';
+import { configureRoutes } from '../../routes/index';
+import { errorHandler } from '../../middleware/errorHandler';
+
 
 // Mock route configuration
 vi.mock('../../routes/index', () => ({

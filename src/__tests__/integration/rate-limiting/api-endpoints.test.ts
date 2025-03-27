@@ -1,10 +1,4 @@
-import request from 'supertest';
-import express from 'express';
-import type { Express } from 'express';
-import { configureRoutes } from '../../../routes/index';
-import { errorHandler } from '../../../middleware/errorHandler';
-import { beforeAll, describe, expect, it, beforeEach, vi, afterEach } from 'vitest';
-
+import { vi } from 'vitest';
 // Mock Redis client
 vi.mock('../../../utils/redis', () => {
   let requestCount = 0;
@@ -25,6 +19,13 @@ vi.mock('../../../utils/redis', () => {
 
   return { getRedisClient: () => mockClient };
 });
+
+import request from 'supertest';
+import express from 'express';
+import type { Express } from 'express';
+import { configureRoutes } from '../../../routes/index';
+import { errorHandler } from '../../../middleware/errorHandler';
+import { beforeAll, describe, expect, it, beforeEach, afterEach } from 'vitest';
 
 describe('Rate Limiting Integration Tests - API Endpoints', () => {
   let app: Express;

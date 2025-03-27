@@ -1,9 +1,4 @@
-import request from 'supertest';
-import express from 'express';
-import type { Express } from 'express';
-import { configureRoutes } from '../../../routes/index';
-import { errorHandler } from '../../../middleware/errorHandler';
-import { beforeAll, describe, expect, it, vi, beforeEach } from 'vitest';
+import { vi } from 'vitest';
 
 // Mock Redis client for rate limiting
 vi.mock('../../../utils/redis', () => {
@@ -29,6 +24,13 @@ vi.mock('../../../utils/redis', () => {
     getRedisClient: () => mockClient,
   };
 });
+
+import request from 'supertest';
+import express from 'express';
+import type { Express } from 'express';
+import { configureRoutes } from '../../../routes/index';
+import { errorHandler } from '../../../middleware/errorHandler';
+import { beforeAll, describe, expect, it, beforeEach } from 'vitest';
 
 describe('Rate Limiting Integration Tests - User Identification', () => {
   let app: Express;
