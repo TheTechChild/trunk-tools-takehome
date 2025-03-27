@@ -1,134 +1,112 @@
-# Development Plan for Phase 3: Core Business Logic
+# Development Plan for Phase 4: Testing Implementation
 
 ## Development Plan Issue
 
 ### Overview
 
-Phase 3 implements the core business logic of the Currency Conversion Service, focusing on integrating with Coinbase API, implementing currency conversion functionality, adding rate limiting, setting up authentication, and implementing request validation.
+Phase 4 focuses on implementing comprehensive testing for the Currency Conversion Service, including unit tests, integration tests, and load tests. This phase ensures the application meets its quality, reliability, and performance requirements.
 
 ### Planned Work
 
-- [ ] Task 1: Implement currency conversion logic
-
-  - Description: Create the core logic for converting between currencies with proper precision handling
-  - Dependencies: Phase 2 (Database & Caching Implementation)
-  - Estimated effort: 2 days
-  - Acceptance criteria:
-    - Currency conversion functions correctly convert BTC to USD
-    - Decimal precision is handled appropriately
-    - Edge cases (very large/small amounts) are handled properly
-    - Error cases for unsupported currency pairs are handled
-
-- [ ] Task 2: Integrate Coinbase API
-
-  - Description: Implement the integration with Coinbase API for real-time exchange rates
-  - Dependencies: Currency conversion logic, Redis caching
-  - Estimated effort: 2 days
-  - Acceptance criteria:
-    - Coinbase API client is implemented with proper error handling
-    - Exchange rates are retrieved successfully
-    - API limitations are respected
-    - Integration with Redis caching is working
-    - Fallback mechanisms for API downtime are in place
-    - Coinbase api url is injected via an environment variable
-
-- [ ] Task 3: Add rate limiting middleware
-
-  - Description: Implement rate limiting based on day of week and user identity
-  - Dependencies: Redis implementation, Authentication system
-  - Estimated effort: 2 days
-  - Acceptance criteria:
-    - Weekday limit (100 requests) is enforced
-    - Weekend limit (200 requests) is enforced
-    - Limits reset at midnight UTC
-    - 429 HTTP responses are returned when limits are exceeded
-    - Rate limiting data is stored in Redis
-
-- [ ] Task 4: Implement authentication system
-
-  - Description: Create a Bearer token authentication system for API access
-  - Dependencies: User data access layer
-  - Estimated effort: 2 days
-  - Acceptance criteria:
-    - Bearer token authentication middleware is implemented
-    - 401 responses for missing/invalid tokens
-    - User identification is extracted from token
-    - Token verification is secure and performant
-    - Auth information is available for rate limiting and logging
-
-- [ ] Task 5: Add request validation
-  - Description: Implement comprehensive input validation for API requests
-  - Dependencies: Express server setup
+- [ ] Task 1: Set up Jest and Supertest
+  - Description: Configure testing framework and utilities for API testing
+  - Dependencies: Phase 3 (Core Business Logic)
   - Estimated effort: 1 day
+  - Acceptance criteria: 
+    - Jest is configured with TypeScript support
+    - Supertest is set up for API testing
+    - Test utilities and helpers are implemented
+    - Test database and Redis setup/teardown logic is in place
+    - Test coverage reporting is configured
+
+- [ ] Task 2: Implement unit tests
+  - Description: Create comprehensive unit tests for all core components
+  - Dependencies: Testing framework setup
+  - Estimated effort: 3 days
   - Acceptance criteria:
-    - All API inputs are validated (currency pairs, amounts)
-    - Appropriate error responses for invalid inputs
-    - Validation logic is reusable across endpoints
-    - Schema validation is type-safe
+    - Exchange rate calculation tests are implemented
+    - Redis caching logic tests are implemented
+    - Rate limiting enforcement tests are implemented
+    - MongoDB request logging tests are implemented
+    - Authentication handling tests are implemented
+    - All tests pass consistently
+
+- [ ] Task 3: Implement integration tests
+  - Description: Create integration tests for full API flows and component interactions
+  - Dependencies: Unit test implementation
+  - Estimated effort: 3 days
+  - Acceptance criteria:
+    - Full currency conversion flow tests are implemented
+    - API resilience and failure handling tests are implemented
+    - Rate limiting behavior tests are implemented
+    - Docker environment tests are implemented
+    - All integration tests pass consistently
+
+- [ ] Task 4: Implement load tests using Artillery
+  - Description: Set up performance and load testing to verify system behavior under stress
+  - Dependencies: Integration test implementation
+  - Estimated effort: 2 days
+  - Acceptance criteria:
+    - Artillery is configured for load testing
+    - High-volume traffic scenarios are defined
+    - Response time verification tests are implemented
+    - Redis caching efficiency tests are implemented
+    - Edge case handling under load is tested
+    - System meets performance requirements (500ms for 95% of requests)
 
 ### Implementation Plan
 
-1. [ ] Step 1: Currency conversion and Coinbase integration
+1. [ ] Step 1: Testing framework setup and unit tests
+   - Technical approach: Configure Jest with TypeScript, implement mocks and test utilities
+   - Potential challenges: Mocking external dependencies like Coinbase API
+   - Mitigation strategies: Create comprehensive mock implementations, use dependency injection
 
-   - Technical approach: Create a service layer for currency conversion with Coinbase API client
-   - Potential challenges: Coinbase API rate limits and response handling
-   - Mitigation strategies: Implement retry logic, proper error handling, and monitoring
-
-2. [ ] Step 2: Authentication and rate limiting
-
-   - Technical approach: Use middleware for authentication and rate limiting with Redis backing store
-   - Potential challenges: Accurately tracking rate limits across distributed systems
-   - Mitigation strategies: Use Redis atomic operations, ensure proper key design for rate limits
-
-3. [ ] Step 3: Request validation and error handling integration
-   - Technical approach: Implement validation middleware with schema validation
-   - Potential challenges: Balancing validation thoroughness with performance
-   - Mitigation strategies: Use efficient validation libraries, precompiled schemas
+2. [ ] Step 2: Integration and load testing
+   - Technical approach: Use Supertest for API testing, Artillery for load testing
+   - Potential challenges: Creating realistic test scenarios, avoiding test flakiness
+   - Mitigation strategies: Use Docker for isolated testing environment, implement retry logic for flaky tests
 
 ### Testing Strategy
 
 - Unit tests needed:
-
-  - Currency conversion logic tests with various amounts
-  - Coinbase API client tests (mocked)
-  - Rate limiting algorithm tests
-  - Authentication middleware tests
-  - Validation logic tests
+  - All service layer functions
+  - Middleware components
+  - API controllers
+  - Database repositories
+  - Utility functions
 
 - Integration tests needed:
-
-  - End-to-end API flow with authentication
-  - Rate limiting behavior across requests
-  - Coinbase API integration (with sandbox environment)
+  - API endpoint tests with database and Redis integration
+  - Authentication and rate limiting integration
+  - Error scenarios and edge cases
 
 - Performance considerations:
-  - Minimize validation overhead
-  - Optimize rate limiting checks
-  - Ensure authentication is efficient
+  - Test execution speed optimization
+  - Realistic performance test scenarios
+  - Measuring cache hit rates during tests
 
 ### Documentation Requirements
 
-- [ ] API endpoint documentation
-- [ ] Authentication requirements documentation
-- [ ] Rate limiting rules documentation
-- [ ] Coinbase API integration details
-- [ ] Input validation rules
+- [ ] Testing strategy documentation
+- [ ] Test coverage reports
+- [ ] Load testing results documentation
+- [ ] CI/CD test integration documentation
+- [ ] Test execution instructions
 
 ### Timeline
 
-- Start date: [After Phase 2 completion]
+- Start date: [After Phase 3 completion]
 - Target completion: 1 week from start date
-- Dependencies on other issues: Requires successful completion of Phase 2
+- Dependencies on other issues: Requires successful completion of Phase 3
 
 ### Success Criteria
 
-1. [ ] Currency conversion accurately converts BTC to USD
-2. [ ] Coinbase API integration provides real-time exchange rates
-3. [ ] Rate limiting correctly enforces daily limits based on weekday/weekend
-4. [ ] Authentication system properly verifies and identifies users
-5. [ ] All API inputs are validated with appropriate error messages
-6. [ ] All tests pass successfully
+1. [ ] Unit test coverage meets target threshold (>80%)
+2. [ ] All integration tests pass consistently
+3. [ ] Load tests demonstrate system meets performance requirements
+4. [ ] Edge cases and failure scenarios are thoroughly tested
+5. [ ] Tests are integrated into CI/CD pipeline
 
 ### Additional Context
 
-Phase 3 implements the core business logic that defines the application's main functionality. The integration with Coinbase, rate limiting implementation, and authentication system are critical components that directly impact the API's reliability and security.
+Phase 4 ensures the reliability and quality of the Currency Conversion Service. The comprehensive testing strategy implemented in this phase will help identify and resolve issues before they impact users, and validate that the system meets its performance requirements.
