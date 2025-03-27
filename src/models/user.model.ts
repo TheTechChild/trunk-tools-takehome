@@ -29,5 +29,14 @@ const UserSchema = new Schema<IUser>(
   }
 );
 
-// Create and export User model
-export const UserModel = mongoose.model<IUser>('User', UserSchema);
+/**
+ * Get or create User model
+ * This prevents the "Cannot overwrite model" error in tests
+ */
+export const getUserModel = (): mongoose.Model<IUser> => {
+  // Check if the model already exists to prevent compilation errors
+  return mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
+};
+
+// For compatibility with existing code, export the model directly
+export const UserModel = getUserModel();

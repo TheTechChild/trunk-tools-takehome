@@ -1,19 +1,30 @@
 import { vi } from 'vitest';
+
 // Mock express listen function
 vi.mock('express', () => {
+  // Create mock middleware functions that return middleware functions
+  const json = vi.fn().mockReturnValue(vi.fn());
+  const urlencoded = vi.fn().mockReturnValue(vi.fn());
+  
+  // Create app mock
   const app = {
     use: vi.fn(),
-    listen: vi.fn(),
+    listen: vi.fn().mockImplementation((port, callback) => {
+      if (callback) callback();
+      return app;
+    }),
   };
+  
+  // Return the mock structure
   return {
     default: vi.fn(() => app),
-    json: vi.fn(),
-    urlencoded: vi.fn(),
+    json,
+    urlencoded,
   };
 });
 
 import express from 'express';
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it, beforeEach, afterEach } from 'vitest';
 import { configureRoutes } from '../../routes/index';
 import { errorHandler } from '../../middleware/errorHandler';
 
@@ -25,6 +36,17 @@ vi.mock('../../routes/index', () => ({
 // Mock error handler
 vi.mock('../../middleware/errorHandler', () => ({
   errorHandler: vi.fn(),
+}));
+
+// Mock database and redis connections to prevent actual connections in tests
+vi.mock('../../config/database', () => ({
+  connectToDatabase: vi.fn().mockResolvedValue(undefined),
+  getDatabaseStatus: vi.fn().mockReturnValue(true),
+}));
+
+vi.mock('../../config/redis', () => ({
+  initializeRedis: vi.fn(),
+  getRedisStatus: vi.fn().mockResolvedValue(true),
 }));
 
 describe('Server Initialization', () => {

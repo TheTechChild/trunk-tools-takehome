@@ -12,6 +12,13 @@ This project is a take-home assignment, focusing on a currency conversion servic
 - Always use ES Module syntax
 - Use vitest and the test commands located in the package.json file to run the test suite
 
+## Testing with Vitest
+when needing to use vitest's `vi.mock()` feature. Please import vi at the top of the file then execute any vi.mocks before any other imports like:
+
+import { vi } from 'vitest';
+
+vi.mock(<your mock code here>);
+
 ## Analysis Process
 
 Before responding to any request, follow these steps:

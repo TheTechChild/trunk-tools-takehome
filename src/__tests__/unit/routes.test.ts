@@ -31,13 +31,22 @@ describe('Route Registration', () => {
     expect(mockUse).toHaveBeenCalledWith('/api/v1/currency', expect.anything());
   });
 
+  it('should register metrics routes on the correct path', () => {
+    // Act
+    configureRoutes(app);
+
+    // Assert
+    expect(mockUse).toHaveBeenCalledWith('/api/v1/metrics', expect.anything());
+  });
+
   it('should register all required routes', () => {
     // Act
     configureRoutes(app);
 
     // Assert
-    expect(mockUse).toHaveBeenCalledTimes(2); // Health and currency routes
+    expect(mockUse).toHaveBeenCalledTimes(3); // Health, currency, and metrics routes
     expect(mockUse).toHaveBeenNthCalledWith(1, '/health', expect.anything());
     expect(mockUse).toHaveBeenNthCalledWith(2, '/api/v1/currency', expect.anything());
+    expect(mockUse).toHaveBeenNthCalledWith(3, '/api/v1/metrics', expect.anything());
   });
 });

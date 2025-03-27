@@ -51,5 +51,14 @@ RequestLogSchema.index({ user_id: 1 });
 RequestLogSchema.index({ timestamp: -1 });
 RequestLogSchema.index({ from_currency: 1, to_currency: 1 });
 
-// Create and export RequestLog model
-export const RequestLogModel = mongoose.model<IRequestLog>('RequestLog', RequestLogSchema);
+/**
+ * Get or create RequestLog model
+ * This prevents the "Cannot overwrite model" error in tests
+ */
+export const getRequestLogModel = (): mongoose.Model<IRequestLog> => {
+  // Check if the model already exists to prevent compilation errors
+  return mongoose.models.RequestLog || mongoose.model<IRequestLog>('RequestLog', RequestLogSchema);
+};
+
+// For compatibility with existing code, export the model directly
+export const RequestLogModel = getRequestLogModel();
