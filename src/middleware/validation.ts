@@ -44,7 +44,10 @@ export const validateRequest = (
         }
 
         // Skip validation if field is not required and not present
-        if (!fieldValidation.required && (data[fieldName] === undefined || data[fieldName] === '')) {
+        if (
+          !fieldValidation.required &&
+          (data[fieldName] === undefined || data[fieldName] === '')
+        ) {
           continue;
         }
 
@@ -57,11 +60,10 @@ export const validateRequest = (
 
       // If there are any validation errors, throw a BadRequestError
       if (Object.keys(errors).length > 0) {
-        throw new BadRequestError(
-          'Validation error',
-          'VALIDATION_ERROR',
-          { errors, requiredFields: requiredFields.length > 0 ? requiredFields : undefined }
-        );
+        throw new BadRequestError('Validation error', 'VALIDATION_ERROR', {
+          errors,
+          requiredFields: requiredFields.length > 0 ? requiredFields : undefined,
+        });
       }
 
       next();
@@ -83,13 +85,13 @@ export const validators = {
   isString: (value: any) => typeof value === 'string',
   isNonEmptyString: (value: any) => typeof value === 'string' && value.trim().length > 0,
   isAlphanumeric: (value: any) => typeof value === 'string' && /^[a-zA-Z0-9]+$/.test(value),
-  
+
   // Number validators
   isNumber: (value: any) => !isNaN(Number(value)),
   isPositiveNumber: (value: any) => !isNaN(Number(value)) && Number(value) > 0,
   isInteger: (value: any) => Number.isInteger(Number(value)),
   isPositiveInteger: (value: any) => Number.isInteger(Number(value)) && Number(value) > 0,
-  
+
   // Special validators
   isCurrency: (value: any) => {
     if (typeof value !== 'string') return false;
@@ -97,20 +99,20 @@ export const validators = {
     // Use supported currencies from constants
     return SUPPORTED_CURRENCIES.includes(upperValue);
   },
-  
+
   // Custom validator factory
   inRange: (min: number, max: number) => (value: any) => {
     const num = Number(value);
     return !isNaN(num) && num >= min && num <= max;
   },
-  
+
   // Email validator
   isEmail: (value: any) => {
     if (typeof value !== 'string') return false;
     // Simple email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(value);
-  }
+  },
 };
 
 /**
@@ -120,16 +122,16 @@ export const currencyConversionSchema = {
   from: {
     validate: validators.isCurrency,
     message: 'Invalid source currency',
-    required: true
+    required: true,
   },
   to: {
     validate: validators.isCurrency,
     message: 'Invalid target currency',
-    required: true
+    required: true,
   },
   amount: {
     validate: validators.isPositiveNumber,
     message: 'Amount must be a positive number',
-    required: true
-  }
-}; 
+    required: true,
+  },
+};

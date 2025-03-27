@@ -62,29 +62,32 @@ export const currencyController = {
   getExchangeRates: async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       const { base } = req.query;
-      
+
       if (!base) {
         throw new BadRequestError('Missing required parameter: base', 'INVALID_PARAMETERS');
       }
 
       const baseCurrency = String(base).toUpperCase();
-      
+
       // We'll get rates for all supported currencies except the base currency
-      const targetCurrencies = SUPPORTED_CURRENCIES.filter(curr => curr !== baseCurrency);
-      
+      const targetCurrencies = SUPPORTED_CURRENCIES.filter((curr) => curr !== baseCurrency);
+
       // Get exchange rates for each target currency
       const ratesPromises = targetCurrencies.map(async (currency) => {
         const { rate } = await coinbaseService.getExchangeRate(baseCurrency, currency);
         return { currency, rate };
       });
-      
+
       const ratesResults = await Promise.all(ratesPromises);
-      
+
       // Convert results to object format { USD: 1.23, BTC: 0.000123 }
-      const rates = ratesResults.reduce((acc, { currency, rate }) => {
-        acc[currency] = rate;
-        return acc;
-      }, {} as Record<string, number>);
+      const rates = ratesResults.reduce(
+        (acc, { currency, rate }) => {
+          acc[currency] = rate;
+          return acc;
+        },
+        {} as Record<string, number>
+      );
 
       res.status(200).json({
         success: true,
@@ -105,7 +108,7 @@ export const currencyController = {
   getSupportedCurrencies: (_req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       // Map the supported currencies to objects with name and code
-      const currencies = SUPPORTED_CURRENCIES.map(code => {
+      const currencies = SUPPORTED_CURRENCIES.map((code) => {
         const name = code === 'BTC' ? 'Bitcoin' : code === 'USD' ? 'US Dollar' : code;
         return { code, name };
       });

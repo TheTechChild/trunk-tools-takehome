@@ -42,4 +42,4 @@ export const MAX_AMOUNTS = {
 // Authentication
 export const AUTH = {
   TOKEN_EXPIRY: '24h', // JWT token expiry
-}; 
+};

@@ -71,4 +71,4 @@ export interface ApiErrorResponse {
 /**
  * API Response (Success or Error)
  */
-export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse; 
+export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;

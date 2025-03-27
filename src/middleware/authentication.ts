@@ -102,4 +102,4 @@ export const optionalAuthenticate = async (
     // Just continue without authentication in case of any errors
     next();
   }
-}; 
+};

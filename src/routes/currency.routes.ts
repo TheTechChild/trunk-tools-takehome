@@ -23,19 +23,16 @@ router.get(
   rateLimiter,
   validateRequest({
     base: {
-      validate: (value) => typeof value === 'string' && SUPPORTED_CURRENCIES.includes(value.toUpperCase()),
+      validate: (value) =>
+        typeof value === 'string' && SUPPORTED_CURRENCIES.includes(value.toUpperCase()),
       message: `Invalid base currency. Must be one of: ${SUPPORTED_CURRENCIES.join(', ')}`,
-      required: true
-    }
+      required: true,
+    },
   }),
   currencyController.getExchangeRates
 );
 
 // GET /api/v1/currency/supported - Get list of supported currencies
-router.get(
-  '/supported',
-  authenticate,
-  currencyController.getSupportedCurrencies
-);
+router.get('/supported', authenticate, currencyController.getSupportedCurrencies);
 
 export default router;

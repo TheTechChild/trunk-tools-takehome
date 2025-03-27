@@ -63,27 +63,20 @@ export class ConversionService {
 
     // Check if currencies are supported
     if (!SUPPORTED_CURRENCIES.includes(normalizedFrom)) {
-      throw new BadRequestError(
-        `Unsupported currency: ${fromCurrency}`,
-        'UNSUPPORTED_CURRENCY',
-        { supportedCurrencies: SUPPORTED_CURRENCIES }
-      );
+      throw new BadRequestError(`Unsupported currency: ${fromCurrency}`, 'UNSUPPORTED_CURRENCY', {
+        supportedCurrencies: SUPPORTED_CURRENCIES,
+      });
     }
 
     if (!SUPPORTED_CURRENCIES.includes(normalizedTo)) {
-      throw new BadRequestError(
-        `Unsupported currency: ${toCurrency}`,
-        'UNSUPPORTED_CURRENCY',
-        { supportedCurrencies: SUPPORTED_CURRENCIES }
-      );
+      throw new BadRequestError(`Unsupported currency: ${toCurrency}`, 'UNSUPPORTED_CURRENCY', {
+        supportedCurrencies: SUPPORTED_CURRENCIES,
+      });
     }
 
     // Check for same currency
     if (normalizedFrom === normalizedTo) {
-      throw new BadRequestError(
-        'Cannot convert to the same currency',
-        'INVALID_CURRENCY_PAIR'
-      );
+      throw new BadRequestError('Cannot convert to the same currency', 'INVALID_CURRENCY_PAIR');
     }
   }
 
@@ -96,10 +89,7 @@ export class ConversionService {
     }
 
     if (amount <= 0) {
-      throw new BadRequestError(
-        'Amount must be greater than zero',
-        'INVALID_AMOUNT'
-      );
+      throw new BadRequestError('Amount must be greater than zero', 'INVALID_AMOUNT');
     }
 
     // Set an upper limit to prevent overflow issues
@@ -171,4 +161,4 @@ export class ConversionService {
 }
 
 // Export singleton instance
-export const conversionService = new ConversionService(); 
+export const conversionService = new ConversionService();
