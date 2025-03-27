@@ -82,10 +82,3 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## Details" >> $GITHUB_STEP_SUMMARY
           echo "For detailed coverage information, check the coverage directory in the workflow artifacts." >> $GITHUB_STEP_SUMMARY
-
-      - name: Upload Coverage Report as Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-report
-          path: ./coverage/
-          retention-days: 7 
