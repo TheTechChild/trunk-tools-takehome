@@ -8,6 +8,9 @@ This project is a take-home assignment, focusing on a currency conversion servic
 - Only use the bun shell for dependency management
 - Do not attempt to use NPM, or any other package manager besides bun to manage dependencies in this project
 
+## General Guidelines
+- Always use ES Module syntax
+
 ## Analysis Process
 
 Before responding to any request, follow these steps:
