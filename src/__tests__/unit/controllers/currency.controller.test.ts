@@ -29,7 +29,7 @@ describe('Currency Controller', () => {
   const nextFunction = vi.fn();
   let responseObject: ResponseObject = {
     statusCode: 0,
-    body: {},
+    body: { data: {} },
   };
 
   beforeEach(() => {
@@ -38,7 +38,7 @@ describe('Currency Controller', () => {
     };
     responseObject = {
       statusCode: 0,
-      body: {},
+      body: { data: {} },
     };
     mockResponse = {
       status: vi.fn().mockImplementation((code) => {
@@ -169,6 +169,12 @@ describe('Currency Controller', () => {
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(responseObject.body.success).toBe(true);
       expect(responseObject.body.data).toBeInstanceOf(Array);
+      
+      // Add type guard to assert it's an array
+      if (!Array.isArray(responseObject.body.data)) {
+        throw new Error('responseObject.body.data is not an array');
+      }
+      
       expect(responseObject.body.data.length).toBeGreaterThan(0);
       expect(responseObject.body.data[0]).toHaveProperty('code');
       expect(responseObject.body.data[0]).toHaveProperty('name');
