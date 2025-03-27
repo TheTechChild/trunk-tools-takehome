@@ -1,14 +1,24 @@
-import type { Request, Response } from 'express';
-
+import type { Request, Response, NextFunction } from 'express';
 import express from 'express';
+import { configureRoutes } from './routes/index';
+import { errorHandler } from './middleware/errorHandler';
 
 const app = express();
-const port = 8000;
+const port = process.env.PORT || 8000;
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!');
-});
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+// Configure all routes
+configureRoutes(app);
+
+// Error handling (should be after routes)
+app.use(errorHandler);
+
+// Start server
 app.listen(port, () => {
-  console.warn(`Server running at http://localhost:${port}`);
+  console.log(`Server running at http://localhost:${port}`);
 });
+
+export default app;
