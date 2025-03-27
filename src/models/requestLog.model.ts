@@ -52,4 +52,4 @@ RequestLogSchema.index({ timestamp: -1 });
 RequestLogSchema.index({ from_currency: 1, to_currency: 1 });
 
 // Create and export RequestLog model
-export const RequestLogModel = mongoose.model<IRequestLog>('RequestLog', RequestLogSchema); 
+export const RequestLogModel = mongoose.model<IRequestLog>('RequestLog', RequestLogSchema);

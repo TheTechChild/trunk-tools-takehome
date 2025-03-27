@@ -1,2 +1,2 @@
 export * from './user.repository';
-export * from './requestLog.repository'; 
+export * from './requestLog.repository';

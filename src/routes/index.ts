@@ -12,7 +12,7 @@ export const configureRoutes = (app: Express): void => {
 
   // API v1 routes
   app.use('/api/v1/currency', currencyRoutes);
-  
+
   // Metrics routes
   app.use('/api/v1/metrics', metricsRoutes);
 };

@@ -63,7 +63,12 @@ export class RequestLogRepository implements RequestLogRepositoryInterface {
   /**
    * Find request logs by date range
    */
-  async findByDateRange(startDate: Date, endDate: Date, limit = 20, skip = 0): Promise<IRequestLog[]> {
+  async findByDateRange(
+    startDate: Date,
+    endDate: Date,
+    limit = 20,
+    skip = 0
+  ): Promise<IRequestLog[]> {
     try {
       return await RequestLogModel.find({
         timestamp: {
@@ -113,4 +118,4 @@ export class RequestLogRepository implements RequestLogRepositoryInterface {
 }
 
 // Export singleton instance
-export const requestLogRepository = new RequestLogRepository(); 
+export const requestLogRepository = new RequestLogRepository();

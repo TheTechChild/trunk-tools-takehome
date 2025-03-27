@@ -47,4 +47,4 @@ export const closeDatabaseConnection = async (): Promise<void> => {
  */
 export const getDatabaseStatus = (): boolean => {
   return mongoose.connection.readyState === 1;
-}; 
+};

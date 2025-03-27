@@ -21,14 +21,14 @@ Request logs adhere to the `IRequestLog` interface and are stored in MongoDB wit
 
 ```typescript
 interface IRequestLog {
-  _id?: string;              // MongoDB-generated ID
-  user_id: string;           // User ID from authentication
-  from_currency: string;     // Source currency code (e.g., "BTC")
-  to_currency: string;       // Target currency code (e.g., "USD")
-  amount: number;            // Amount to convert
-  converted_amount: number;  // Resulting converted amount
-  exchange_rate: number;     // Exchange rate used for conversion
-  timestamp: Date;           // When the conversion was performed
+  _id?: string; // MongoDB-generated ID
+  user_id: string; // User ID from authentication
+  from_currency: string; // Source currency code (e.g., "BTC")
+  to_currency: string; // Target currency code (e.g., "USD")
+  amount: number; // Amount to convert
+  converted_amount: number; // Resulting converted amount
+  exchange_rate: number; // Exchange rate used for conversion
+  timestamp: Date; // When the conversion was performed
 }
 ```
 
@@ -93,9 +93,5 @@ Example:
 // Count conversions by user in the last 24 hours
 const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
 const today = new Date();
-const count = await requestLogRepository.countByUserIdAndDateRange(
-  userId,
-  yesterday,
-  today
-);
-``` 
+const count = await requestLogRepository.countByUserIdAndDateRange(userId, yesterday, today);
+```

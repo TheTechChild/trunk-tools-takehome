@@ -28,8 +28,18 @@ The `RequestLogRepositoryInterface` defines the contract for request log operati
 export interface RequestLogRepositoryInterface {
   create(logData: Omit<IRequestLog, '_id'>): Promise<IRequestLog>;
   findByUserId(userId: string, limit?: number, skip?: number): Promise<IRequestLog[]>;
-  findByCurrencyPair(fromCurrency: string, toCurrency: string, limit?: number, skip?: number): Promise<IRequestLog[]>;
-  findByDateRange(startDate: Date, endDate: Date, limit?: number, skip?: number): Promise<IRequestLog[]>;
+  findByCurrencyPair(
+    fromCurrency: string,
+    toCurrency: string,
+    limit?: number,
+    skip?: number
+  ): Promise<IRequestLog[]>;
+  findByDateRange(
+    startDate: Date,
+    endDate: Date,
+    limit?: number,
+    skip?: number
+  ): Promise<IRequestLog[]>;
   countByUserId(userId: string): Promise<number>;
   countByUserIdAndDateRange(userId: string, startDate: Date, endDate: Date): Promise<number>;
 }
@@ -68,7 +78,7 @@ import { userRepository } from '../repositories';
 // Create a new user
 try {
   const newUser = await userRepository.create({
-    email: 'user@example.com'
+    email: 'user@example.com',
   });
   console.log('User created:', newUser);
 } catch (error) {
@@ -90,7 +100,7 @@ try {
     amount: 1.5,
     converted_amount: 67890.12,
     exchange_rate: 45260.08,
-    timestamp: new Date()
+    timestamp: new Date(),
   });
   console.log('Request logged:', log);
 } catch (error) {
@@ -128,4 +138,4 @@ The data access layer leverages TypeScript interfaces to ensure type safety:
 
 - `IUser` and `IRequestLog` interfaces define the structure of database entities
 - Repository methods use these interfaces to ensure type consistency
-- TypeScript's utility types (`Omit`, `Partial`) provide additional type safety for operations 
+- TypeScript's utility types (`Omit`, `Partial`) provide additional type safety for operations

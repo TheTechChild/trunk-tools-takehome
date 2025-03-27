@@ -30,7 +30,7 @@ The Currency Conversion Service requires the following environment variables:
 
 - `CURRENCY_API_KEY`: API key for external currency service
 
-## Example .env File 
+## Example .env File
 
 ```
 # Application
@@ -75,4 +75,4 @@ REDIS_URI=redis://redis:6379
 NODE_ENV=production
 MONGODB_URI=mongodb://user:password@production-db:27017/currency-service?authSource=admin
 REDIS_URI=redis://:password@production-redis:6379
-``` 
+```

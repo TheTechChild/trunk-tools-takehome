@@ -1,2 +1,2 @@
 export * from './cache.service';
-export * from './exchangeRate.service'; 
+export * from './exchangeRate.service';

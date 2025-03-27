@@ -49,4 +49,4 @@ Cache performance is tracked with the following metrics:
 - **Deletes**: Successful cache removals
 - **Errors**: Failed cache operations
 
-These metrics are available via the `/api/v1/metrics/cache` endpoint. 
+These metrics are available via the `/api/v1/metrics/cache` endpoint.

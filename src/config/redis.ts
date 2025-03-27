@@ -16,9 +16,9 @@ export const initializeRedis = (): Redis => {
   if (redisClient) {
     return redisClient;
   }
-  
+
   const REDIS_URI = process.env.REDIS_URI || 'redis://localhost:6379';
-  
+
   try {
     redisClient = new Redis(REDIS_URI, {
       connectTimeout: REDIS_CONNECT_TIMEOUT,
@@ -78,11 +78,11 @@ export const getRedisStatus = async (): Promise<boolean> => {
   if (!redisClient) {
     return false;
   }
-  
+
   try {
     const result = await redisClient.ping();
     return result === 'PONG';
   } catch {
     return false;
   }
-}; 
+};

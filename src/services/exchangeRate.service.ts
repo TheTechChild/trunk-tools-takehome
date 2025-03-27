@@ -15,38 +15,37 @@ export class ExchangeRateService {
    */
   async getExchangeRate(fromCurrency: string, toCurrency: string): Promise<number> {
     const cacheKey = this.buildCacheKey(fromCurrency, toCurrency);
-    
+
     try {
       // Try to get from cache first
       const cachedRate = await this.getRateFromCache(cacheKey);
-      
+
       if (cachedRate) {
         // Return cached data immediately
         const cachedTimestamp = new Date(cachedRate.timestamp);
         const currentTime = new Date();
-        
+
         // Check if the cache is getting stale (>75% of TTL elapsed)
         const cacheAge = currentTime.getTime() - cachedTimestamp.getTime();
         const staleTreshold = this.DEFAULT_TTL * 1000 * 0.75; // 75% of TTL in ms
-        
+
         // If cache is getting stale, refresh in background
         if (cacheAge > staleTreshold) {
           // Don't await - refresh in background
-          this.refreshCache(fromCurrency, toCurrency)
-            .catch(error => {
-              console.error(`Background refresh failed for ${fromCurrency}-${toCurrency}:`, error);
-            });
+          this.refreshCache(fromCurrency, toCurrency).catch((error) => {
+            console.error(`Background refresh failed for ${fromCurrency}-${toCurrency}:`, error);
+          });
         }
-        
+
         return cachedRate.exchange_rate;
       }
-      
+
       // Not in cache, fetch from external API
       const exchangeRate = await this.fetchRateFromExternalAPI(fromCurrency, toCurrency);
-      
+
       // Cache the new rate
       await this.cacheExchangeRate(cacheKey, exchangeRate);
-      
+
       return exchangeRate;
     } catch (error) {
       console.error('Error getting exchange rate:', error);
@@ -57,9 +56,12 @@ export class ExchangeRateService {
   /**
    * Get exchange rates for multiple currencies
    */
-  async getExchangeRates(baseCurrency: string, targetCurrencies: string[]): Promise<Record<string, number>> {
+  async getExchangeRates(
+    baseCurrency: string,
+    targetCurrencies: string[]
+  ): Promise<Record<string, number>> {
     const result: Record<string, number> = {};
-    
+
     // Execute in parallel for better performance
     await Promise.all(
       targetCurrencies.map(async (targetCurrency) => {
@@ -72,7 +74,7 @@ export class ExchangeRateService {
         }
       })
     );
-    
+
     return result;
   }
 
@@ -98,7 +100,7 @@ export class ExchangeRateService {
       exchange_rate: rate,
       timestamp: new Date().toISOString(),
     };
-    
+
     await cacheService.set<ExchangeRateCache>(cacheKey, cacheValue, {
       ttl: this.DEFAULT_TTL,
     });
@@ -108,7 +110,10 @@ export class ExchangeRateService {
    * Fetch exchange rate from external API
    * Currently mocked, but will be replaced by actual API call in Phase 3
    */
-  private async fetchRateFromExternalAPI(fromCurrency: string, toCurrency: string): Promise<number> {
+  private async fetchRateFromExternalAPI(
+    fromCurrency: string,
+    toCurrency: string
+  ): Promise<number> {
     // Mock implementation - will be replaced with actual API call
     // This is just for Phase 2 implementation
     const mockRates: Record<string, number> = {
@@ -118,13 +123,13 @@ export class ExchangeRateService {
       'EUR-USD': 1.1,
       'BTC-EUR': 61800.21,
     };
-    
+
     const key = `${fromCurrency.toUpperCase()}-${toCurrency.toUpperCase()}`;
     const reverseKey = `${toCurrency.toUpperCase()}-${fromCurrency.toUpperCase()}`;
-    
+
     // Simulate API call delay
     await new Promise((resolve) => setTimeout(resolve, 100));
-    
+
     if (mockRates[key]) {
       return mockRates[key];
     } else if (mockRates[reverseKey]) {
@@ -148,16 +153,16 @@ export class ExchangeRateService {
    */
   async refreshCache(fromCurrency: string, toCurrency: string): Promise<number> {
     const cacheKey = this.buildCacheKey(fromCurrency, toCurrency);
-    
+
     // Fetch new rate from API
     const exchangeRate = await this.fetchRateFromExternalAPI(fromCurrency, toCurrency);
-    
+
     // Update cache
     await this.cacheExchangeRate(cacheKey, exchangeRate);
-    
+
     return exchangeRate;
   }
 }
 
 // Export singleton instance
-export const exchangeRateService = new ExchangeRateService(); 
+export const exchangeRateService = new ExchangeRateService();

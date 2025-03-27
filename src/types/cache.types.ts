@@ -17,4 +17,4 @@ export interface CacheServiceInterface {
   del(key: string): Promise<void>;
   exists(key: string): Promise<boolean>;
   ping(): Promise<boolean>;
-} 
+}

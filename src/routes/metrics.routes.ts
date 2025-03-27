@@ -9,4 +9,4 @@ router.get('/cache', metricsController.getCacheMetrics);
 // GET /api/v1/metrics/health - Get system health
 router.get('/health', metricsController.getSystemHealth);
 
-export default router; 
+export default router;

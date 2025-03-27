@@ -17,7 +17,6 @@ import { describe, expect, it, beforeEach } from 'vitest';
 import { configureRoutes } from '../../routes/index';
 import { errorHandler } from '../../middleware/errorHandler';
 
-
 // Mock route configuration
 vi.mock('../../routes/index', () => ({
   configureRoutes: vi.fn(),

@@ -17,4 +17,4 @@ export interface IRequestLog {
   converted_amount: number;
   exchange_rate: number;
   timestamp: Date;
-} 
+}

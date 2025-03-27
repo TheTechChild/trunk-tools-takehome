@@ -13,7 +13,7 @@ export const metricsController = {
   getCacheMetrics: (req: Request, res: Response, next: NextFunction) => {
     try {
       const metrics = cacheService.getMetrics();
-      
+
       res.status(200).json({
         success: true,
         data: {
@@ -24,7 +24,7 @@ export const metricsController = {
       next(error);
     }
   },
-  
+
   /**
    * Get system health metrics
    */
@@ -32,7 +32,7 @@ export const metricsController = {
     try {
       const redisStatus = await getRedisStatus();
       const databaseStatus = getDatabaseStatus();
-      
+
       res.status(200).json({
         success: true,
         data: {
@@ -48,4 +48,4 @@ export const metricsController = {
       next(error);
     }
   },
-}; 
+};

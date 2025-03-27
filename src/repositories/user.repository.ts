@@ -54,7 +54,7 @@ export class UserRepository implements UserRepositoryInterface {
         { $set: userData },
         { new: true }
       ).lean();
-      
+
       return updatedUser;
     } catch (error) {
       console.error('Error updating user:', error);
@@ -77,4 +77,4 @@ export class UserRepository implements UserRepositoryInterface {
 }
 
 // Export singleton instance
-export const userRepository = new UserRepository(); 
+export const userRepository = new UserRepository();

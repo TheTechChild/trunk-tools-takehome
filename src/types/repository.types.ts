@@ -14,8 +14,18 @@ export interface UserRepositoryInterface {
 export interface RequestLogRepositoryInterface {
   create(logData: Omit<IRequestLog, '_id'>): Promise<IRequestLog>;
   findByUserId(userId: string, limit?: number, skip?: number): Promise<IRequestLog[]>;
-  findByCurrencyPair(fromCurrency: string, toCurrency: string, limit?: number, skip?: number): Promise<IRequestLog[]>;
-  findByDateRange(startDate: Date, endDate: Date, limit?: number, skip?: number): Promise<IRequestLog[]>;
+  findByCurrencyPair(
+    fromCurrency: string,
+    toCurrency: string,
+    limit?: number,
+    skip?: number
+  ): Promise<IRequestLog[]>;
+  findByDateRange(
+    startDate: Date,
+    endDate: Date,
+    limit?: number,
+    skip?: number
+  ): Promise<IRequestLog[]>;
   countByUserId(userId: string): Promise<number>;
   countByUserIdAndDateRange(userId: string, startDate: Date, endDate: Date): Promise<number>;
-} 
+}
