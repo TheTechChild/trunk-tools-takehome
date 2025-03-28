@@ -1,0 +1,9 @@
+[test]
+coverage = true
+coverageThreshold = 80
+timeout = 30000
+
+[coverage]
+reportType = ["html", "text"]
+include = ["src/**/*.ts"]
+exclude = ["src/**/*.d.ts", "src/**/__tests__/**"] 
