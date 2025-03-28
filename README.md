@@ -31,13 +31,16 @@ The easiest way to get started is using Docker Compose, which will set up the en
 
 ```bash
 # Build and start all containers
-docker-compose up -d
+bun run docker:up
+
+# Seed the database with initial data
+bun run seed
 
 # View application logs
 docker-compose logs -f app
 
 # Stop all containers
-docker-compose down
+bun run docker:down
 ```
 
 The application will be available at `http://localhost:8000`.
@@ -97,8 +100,8 @@ A Postman collection is available to help you test the API endpoints. You can fi
    - Create a new environment in Postman
    - Add the following variables:
      - `domain`: Set to `localhost:8000` for local development
-     - `UserId`: Your user ID for authentication (required for most endpoints)
-     - `UserId2`: Alternative user ID for testing different scenarios
+     - `UserId`: One of the user ids that you see after running the seed command
+     - `UserId2`: A different user id that you see after running the seed command
 
 3. Available requests in the collection:
    - Health Check (Basic and Detailed)
