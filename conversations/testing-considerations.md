@@ -78,7 +78,7 @@ All functionality must be **covered by automated tests** using **Bun test runner
 
 ## **Implementation Strategy**
 
-- **Jest + Supertest** for API testing.
+- **Bun test runner** for API testing.
 - **MongoDB in-memory server** for unit tests.
 - **Redis-mock** to simulate caching.
 - **Artillery** for load testing.

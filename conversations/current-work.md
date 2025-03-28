@@ -8,18 +8,19 @@ Phase 4 focuses on implementing comprehensive testing for the Currency Conversio
 
 ### Planned Work
 
-- [ ] Task 1: Set up Jest and Supertest
+- [ ] Task 1: Set up Bun test runner
+
   - Description: Configure testing framework and utilities for API testing
   - Dependencies: Phase 3 (Core Business Logic)
   - Estimated effort: 1 day
-  - Acceptance criteria: 
-    - Jest is configured with TypeScript support
-    - Supertest is set up for API testing
+  - Acceptance criteria:
+    - Bun test runner
     - Test utilities and helpers are implemented
     - Test database and Redis setup/teardown logic is in place
     - Test coverage reporting is configured
 
 - [ ] Task 2: Implement unit tests
+
   - Description: Create comprehensive unit tests for all core components
   - Dependencies: Testing framework setup
   - Estimated effort: 3 days
@@ -32,6 +33,7 @@ Phase 4 focuses on implementing comprehensive testing for the Currency Conversio
     - All tests pass consistently
 
 - [ ] Task 3: Implement integration tests
+
   - Description: Create integration tests for full API flows and component interactions
   - Dependencies: Unit test implementation
   - Estimated effort: 3 days
@@ -57,18 +59,20 @@ Phase 4 focuses on implementing comprehensive testing for the Currency Conversio
 ### Implementation Plan
 
 1. [ ] Step 1: Testing framework setup and unit tests
-   - Technical approach: Configure Jest with TypeScript, implement mocks and test utilities
+
+   - Technical approach: Configure Bun test runner, implement mocks and test utilities
    - Potential challenges: Mocking external dependencies like Coinbase API
    - Mitigation strategies: Create comprehensive mock implementations, use dependency injection
 
 2. [ ] Step 2: Integration and load testing
-   - Technical approach: Use Supertest for API testing, Artillery for load testing
+   - Technical approach: Use Artillery for load testing, Bun test runner's fetch and other components to test api endpoints
    - Potential challenges: Creating realistic test scenarios, avoiding test flakiness
    - Mitigation strategies: Use Docker for isolated testing environment, implement retry logic for flaky tests
 
 ### Testing Strategy
 
 - Unit tests needed:
+
   - All service layer functions
   - Middleware components
   - API controllers
@@ -76,6 +80,7 @@ Phase 4 focuses on implementing comprehensive testing for the Currency Conversio
   - Utility functions
 
 - Integration tests needed:
+
   - API endpoint tests with database and Redis integration
   - Authentication and rate limiting integration
   - Error scenarios and edge cases

@@ -10,7 +10,7 @@ A Dockerized Node.js & Express currency conversion API that integrates Coinbase 
 - **Database**: MongoDB
 - **Caching**: Redis
 - **External API**: Coinbase
-- **Testing**: Jest + Supertest
+- **Testing**: Bun test runner
 - **Containerization**: Docker
 - **Load Testing**: Artillery
 
@@ -282,7 +282,7 @@ A Dockerized Node.js & Express currency conversion API that integrates Coinbase 
 
 ### Phase 4: Testing Implementation
 
-1. Set up Jest and Supertest
+1. Set up Bun test runner
 2. Implement unit tests for:
    - Exchange rate calculations
    - Redis caching logic
