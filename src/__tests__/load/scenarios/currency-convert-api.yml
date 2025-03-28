@@ -1,0 +1,111 @@
+config:
+  target: "http://localhost:8000"
+  phases:
+    - duration: 60
+      arrivalRate: 5
+      rampTo: 20
+      name: "Warm up phase"
+    - duration: 120
+      arrivalRate: 20
+      name: "Sustained load"
+    - duration: 60
+      arrivalRate: 50
+      name: "Peak load test"
+  defaults:
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+      Authorization: "Bearer {{ userId }}"
+
+  processor: "../dist/processor.mjs"
+
+  plugins:
+    metrics-by-endpoint: {}
+    expect: {}
+
+  apdex:
+    threshold: 500  # 500ms threshold (requests under this are "satisfying")
+    
+  ensure:
+    p95: 500        # 95% of responses must be under 500ms
+    maxErrorRate: 5 # Error rate should be under 5%
+
+scenarios:
+  - name: "Currency conversion flow"
+    flow:
+      # Currency conversion with cache miss (first request)
+      - get:
+          url: "/api/v1/currency/convert?from=USD&to=BTC&amount=100"
+          expect:
+            - statusCode: 200
+            - contentType: "application/json"
+            - hasProperty: "result"
+            - hasProperty: "result.convertedAmount"
+      
+      # Currency conversion with cache hit (repeated request)
+      - think: 1
+      
+      - get:
+          url: "/api/v1/currency/convert?from=USD&to=BTC&amount=100"
+          expect:
+            - statusCode: 200
+            - contentType: "application/json"
+            - hasProperty: "result"
+            - hasProperty: "result.convertedAmount"
+            - responseTime: 
+                max: 100  # Should be much faster with caching
+      
+      # Use a different currency pair
+      - think: 1
+      
+      - get:
+          url: "/api/v1/currency/convert?from=BTC&to=USD&amount=100"
+          expect:
+            - statusCode: 200
+            - contentType: "application/json"
+            - hasProperty: "result"
+            - hasProperty: "result.convertedAmount"
+      
+      # Test with different amount
+      - think: 1
+      
+      - get:
+          url: "/api/v1/currency/convert?from=BTC&to=USD&amount=5000"
+          expect:
+            - statusCode: 200
+            - contentType: "application/json"
+            - hasProperty: "result"
+            - hasProperty: "result.convertedAmount"
+
+  - name: "Error handling flow"
+    flow:
+      # Test invalid currency
+      - get:
+          url: "/api/v1/currency/convert?from=USD&to=XYZ&amount=100"
+          expect:
+            - statusCode: 400
+            - contentType: "application/json"
+            - hasProperty: "error"
+            - hasProperty: "error.message"
+      
+      # Test negative amount
+      - think: 1
+      
+      - get:
+          url: "/api/v1/currency/convert?from=USD&to=BTC&amount=-100"
+          expect:
+            - statusCode: 400
+            - contentType: "application/json"
+            - hasProperty: "error"
+            - hasProperty: "error.message"
+      
+      # Test missing parameters
+      - think: 1
+      
+      - get:
+          url: "/api/v1/currency/convert?from=USD&amount=100"
+          expect:
+            - statusCode: 400
+            - contentType: "application/json"
+            - hasProperty: "error"
+            - hasProperty: "error.message" 
