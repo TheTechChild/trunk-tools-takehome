@@ -13,7 +13,9 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "docker:build": "docker-compose build",
     "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down"
+    "docker:down": "docker-compose down",
+    "seed": "bun run src/scripts/seed-users",
+    "restart": "bun docker:down ; bun docker:build ; bun docker:up ; bun seed"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
