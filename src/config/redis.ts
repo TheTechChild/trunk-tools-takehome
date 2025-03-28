@@ -40,7 +40,8 @@ export const initializeRedis = async (): Promise<Redis> => {
       redisClient!.once('ready', () => {
         console.info('Connected to Redis');
         // Test basic Redis commands to ensure they're available
-        redisClient!.ping()
+        redisClient!
+          .ping()
           .then(() => {
             resolve(redisClient!);
           })
