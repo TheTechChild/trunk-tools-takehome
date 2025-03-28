@@ -6,7 +6,7 @@ import { userRepository } from '../repositories/user.repository';
 export interface AuthenticatedRequest extends Request {
   user?: {
     userId: string;
-    email: string;
+    email?: string;
   };
 }
 
@@ -20,7 +20,7 @@ export const authenticate = async (
   next: NextFunction
 ) => {
   try {
-    // Get authorization header
+    // Get Bearer token authentication
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
@@ -57,49 +57,5 @@ export const authenticate = async (
     next();
   } catch (error) {
     next(error);
-  }
-};
-
-/**
- * Optional authentication middleware
- * Tries to authenticate the user but doesn't fail if authentication is missing
- */
-export const optionalAuthenticate = async (
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader) {
-      return next(); // Skip authentication if no header
-    }
-
-    const parts = authHeader.split(' ');
-    if (parts.length !== 2 || parts[0] !== 'Bearer') {
-      return next(); // Skip if not in correct format
-    }
-
-    const token = parts[1];
-    if (!token) {
-      return next(); // Skip if no token
-    }
-
-    // Find user by ID (token)
-    const user = await userRepository.findById(token);
-
-    if (user) {
-      // Attach user info to request
-      req.user = {
-        userId: user._id,
-        email: user.email,
-      };
-    }
-
-    next();
-  } catch {
-    // Just continue without authentication in case of any errors
-    next();
   }
 };
