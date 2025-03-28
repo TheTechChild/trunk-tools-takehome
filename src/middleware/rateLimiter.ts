@@ -69,6 +69,7 @@ export const rateLimiter = async (req: AuthenticatedRequest, res: Response, next
     // Add rate limit headers to the response
     res.set('X-RateLimit-Limit', rateLimit.toString());
     res.set('X-RateLimit-Remaining', (rateLimit - requestCount).toString());
+    res.set('X-RateLimit-Reset', Math.floor(await redisClient.ttl(rateLimitKey)).toString());
 
     // Continue with the request
     next();

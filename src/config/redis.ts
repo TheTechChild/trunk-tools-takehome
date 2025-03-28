@@ -14,8 +14,11 @@ let redisClient: Redis | null = null;
  * Returns a Promise that resolves when Redis is ready
  */
 export const initializeRedis = async (): Promise<Redis> => {
-  if (redisClient) {
+  if (redisClient && redisClient.status === 'ready') {
     return redisClient;
+  } else if (redisClient) {
+    await redisClient.quit();
+    redisClient = null;
   }
 
   const REDIS_URI = process.env.REDIS_URI || 'redis://localhost:6379';
@@ -36,7 +39,12 @@ export const initializeRedis = async (): Promise<Redis> => {
     return new Promise((resolve, reject) => {
       redisClient!.once('ready', () => {
         console.info('Connected to Redis');
-        resolve(redisClient!);
+        // Test basic Redis commands to ensure they're available
+        redisClient!.ping()
+          .then(() => {
+            resolve(redisClient!);
+          })
+          .catch(reject);
       });
 
       redisClient!.once('error', (error) => {
@@ -55,7 +63,7 @@ export const initializeRedis = async (): Promise<Redis> => {
  * If not initialized, will initialize first
  */
 export const getRedisClient = async (): Promise<Redis> => {
-  if (!redisClient) {
+  if (!redisClient || redisClient.status !== 'ready') {
     return initializeRedis();
   }
   return redisClient;
