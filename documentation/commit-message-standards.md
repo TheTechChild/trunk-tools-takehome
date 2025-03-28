@@ -32,6 +32,7 @@ The `type` field must be one of the following:
 ### Scope
 
 The `scope` field is optional and should be a noun describing the section of the codebase the commit affects. Examples:
+
 - `feat(auth)`: New authentication feature
 - `fix(api)`: Bug fix in the API
 - `docs(readme)`: Documentation changes in the README
@@ -39,6 +40,7 @@ The `scope` field is optional and should be a noun describing the section of the
 ### Description
 
 The `description` field should:
+
 - Use the imperative, present tense: "change" not "changed" nor "changes"
 - Not capitalize the first letter
 - Have no dot (.) at the end
@@ -46,6 +48,7 @@ The `description` field should:
 ### Body
 
 The `body` field is optional and should:
+
 - Be wrapped at 100 characters
 - Include the motivation for the change
 - Contrast with previous behavior
@@ -53,6 +56,7 @@ The `body` field is optional and should:
 ### Footer
 
 The `footer` field is optional and can contain:
+
 - Breaking changes
 - Related issues
 - Deprecation notices
