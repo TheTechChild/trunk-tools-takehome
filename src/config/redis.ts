@@ -11,8 +11,9 @@ let redisClient: Redis | null = null;
 
 /**
  * Initialize Redis connection
+ * Returns a Promise that resolves when Redis is ready
  */
-export const initializeRedis = (): Redis => {
+export const initializeRedis = async (): Promise<Redis> => {
   if (redisClient) {
     return redisClient;
   }
@@ -31,15 +32,18 @@ export const initializeRedis = (): Redis => {
       },
     });
 
-    redisClient.on('connect', () => {
-      console.info('Connected to Redis');
-    });
+    // Return a promise that resolves when Redis is ready
+    return new Promise((resolve, reject) => {
+      redisClient!.once('ready', () => {
+        console.info('Connected to Redis');
+        resolve(redisClient!);
+      });
 
-    redisClient.on('error', (error) => {
-      console.error('Redis connection error:', error);
+      redisClient!.once('error', (error) => {
+        console.error('Redis connection error:', error);
+        reject(error);
+      });
     });
-
-    return redisClient;
   } catch (error) {
     console.error('Redis initialization error:', error);
     throw error;
@@ -47,9 +51,10 @@ export const initializeRedis = (): Redis => {
 };
 
 /**
- * Get Redis client
+ * Get Redis client instance
+ * If not initialized, will initialize first
  */
-export const getRedisClient = (): Redis => {
+export const getRedisClient = async (): Promise<Redis> => {
   if (!redisClient) {
     return initializeRedis();
   }
@@ -61,13 +66,9 @@ export const getRedisClient = (): Redis => {
  */
 export const closeRedisConnection = async (): Promise<void> => {
   if (redisClient) {
-    try {
-      await redisClient.quit();
-      redisClient = null;
-      console.info('Redis connection closed');
-    } catch (error) {
-      console.error('Error closing Redis connection:', error);
-    }
+    await redisClient.quit();
+    redisClient = null;
+    console.info('Redis connection closed');
   }
 };
 
