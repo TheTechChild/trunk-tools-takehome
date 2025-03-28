@@ -1,0 +1,267 @@
+{
+	"info": {
+		"_postman_id": "e6eb2a07-fac8-4ea9-9886-5c26fe66ea3f",
+		"name": "Trunk Tools POC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4294613"
+	},
+	"item": [
+		{
+			"name": "Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{domain}}/health",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Health (Detailed)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{UserId}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{domain}}/health/detailed",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"health",
+						"detailed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Supported Currencies",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{UserId}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{domain}}/api/v1/currency/supported",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"currency",
+						"supported"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Rates",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{UserId}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "base",
+							"value": "'USD'",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{domain}}/api/v1/currency/rates?base=USD",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"currency",
+						"rates"
+					],
+					"query": [
+						{
+							"key": "base",
+							"value": "USD"
+						},
+						{
+							"key": "base",
+							"value": "BTC",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Convert Currency",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{UserId}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{domain}}/api/v1/currency/convert?from=USD&to=BTC&amount=1000",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"currency",
+						"convert"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "USD"
+						},
+						{
+							"key": "to",
+							"value": "BTC"
+						},
+						{
+							"key": "amount",
+							"value": "1000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Health Metrics",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{domain}}/api/v1/metrics/health",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"metrics",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Cache Metrics",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{UserId2}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{domain}}/api/v1/metrics/cache",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"metrics",
+						"cache"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "UserId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "domain",
+			"value": "localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "UserId2",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

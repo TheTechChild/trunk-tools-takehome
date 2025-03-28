@@ -53,16 +53,48 @@ To minimize API calls and improve performance, exchange rates are cached in Redi
 3. The cache key format is `exchange_rate:{FROM_CURRENCY}-{TO_CURRENCY}`
 4. Each cached entry includes both the rate and the timestamp when it was fetched
 
-The cache TTL can be configured via the `CACHE.EXCHANGE_RATE_TTL` constant in the code (default: 600 seconds).
+Cache Configuration:
+- TTL: 600 seconds (10 minutes)
+- Key Format: `exchange_rate:{FROM}-{TO}`
+- Value Format: JSON string containing rate and timestamp
 
 ### Error Handling
 
-The integration includes robust error handling:
+The integration includes robust error handling with specific error codes:
 
-1. Network errors are caught and appropriate error responses are returned
-2. Invalid or unsuccessful API responses are properly handled
-3. If the API is unavailable, the system will use cached rates if available
-4. Clear error messages are provided when the API integration fails
+1. **Network Errors**
+   - Error Code: `EXCHANGE_RATE_FETCH_ERROR`
+   - Message: "Failed to fetch exchange rate"
+   - Action: Attempts to use cached rate if available
+
+2. **API Response Errors**
+   - Error Code: `EXCHANGE_RATE_API_ERROR`
+   - Message: "Unable to fetch exchange rate from external service"
+   - Conditions:
+     - Invalid API response format
+     - Missing rate data
+     - HTTP status code errors
+
+3. **Cache Errors**
+   - Error Code: `CACHE_ERROR`
+   - Message: "Failed to cache exchange rate"
+   - Action: Logs error but continues processing
+
+Error Response Format:
+```json
+{
+  "success": false,
+  "error": {
+    "code": "EXCHANGE_RATE_API_ERROR",
+    "message": "Unable to fetch exchange rate from external service",
+    "details": {
+      "from": "BTC",
+      "to": "USD",
+      "timestamp": "2023-04-01T12:34:56.789Z"
+    }
+  }
+}
+```
 
 ## Rate Limiting Considerations
 

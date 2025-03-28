@@ -95,3 +95,234 @@ const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
 const today = new Date();
 const count = await requestLogRepository.countByUserIdAndDateRange(userId, yesterday, today);
 ```
+
+## Log Types
+
+### Request Logs
+
+Request logs track all currency conversion requests with the following information:
+
+```typescript
+interface IRequestLog {
+  user_id: string;
+  from_currency: string;
+  to_currency: string;
+  amount: number;
+  converted_amount: number;
+  exchange_rate: number;
+  timestamp: Date;
+}
+```
+
+### Error Logs
+
+Error logs capture system errors and exceptions:
+
+```typescript
+interface IErrorLog {
+  timestamp: Date;
+  level: 'ERROR' | 'WARN' | 'INFO';
+  message: string;
+  stack?: string;
+  context?: Record<string, any>;
+}
+```
+
+### Access Logs
+
+Access logs track API access patterns:
+
+```typescript
+interface IAccessLog {
+  timestamp: Date;
+  method: string;
+  path: string;
+  status_code: number;
+  response_time: number;
+  user_id?: string;
+  ip_address: string;
+}
+```
+
+## Implementation Details
+
+### Request Logging
+
+1. **Non-Blocking Logging**
+   ```typescript
+   // Example non-blocking logging
+   const logData = {
+     user_id: userId,
+     from_currency: fromCurrency,
+     to_currency: toCurrency,
+     amount: amount,
+     converted_amount: convertedAmount,
+     exchange_rate: exchangeRate,
+     timestamp: new Date()
+   };
+
+   // Log asynchronously without awaiting
+   requestLogRepository.create(logData)
+     .catch(error => console.error('Failed to log request:', error));
+   ```
+
+2. **Performance Considerations**
+   - Asynchronous logging
+   - Batch processing for high volume
+   - Indexed fields for fast queries
+
+### Error Logging
+
+1. **Error Capture**
+   ```typescript
+   // Example error logging
+   try {
+     // Operation that might fail
+   } catch (error) {
+     await errorLogRepository.create({
+       timestamp: new Date(),
+       level: 'ERROR',
+       message: error.message,
+       stack: error.stack,
+       context: {
+         operation: 'currency_conversion',
+         user_id: userId
+       }
+     });
+     throw error;
+   }
+   ```
+
+2. **Error Classification**
+   - Validation errors
+   - Authentication errors
+   - Rate limit errors
+   - External API errors
+
+## Log Storage
+
+### MongoDB Collections
+
+1. **request_logs**
+   - Indexes:
+     - `user_id`
+     - `timestamp`
+     - `{user_id, timestamp}`
+
+2. **error_logs**
+   - Indexes:
+     - `timestamp`
+     - `level`
+     - `{level, timestamp}`
+
+3. **access_logs**
+   - Indexes:
+     - `timestamp`
+     - `user_id`
+     - `{method, path}`
+
+## Log Analysis
+
+### Common Queries
+
+1. **User Activity**
+   ```javascript
+   db.request_logs.aggregate([
+     { $match: { user_id: "user123" } },
+     { $group: {
+       _id: null,
+       total_requests: { $sum: 1 },
+       total_amount: { $sum: "$amount" }
+     }}
+   ]);
+   ```
+
+2. **Error Analysis**
+   ```javascript
+   db.error_logs.aggregate([
+     { $match: { level: "ERROR" } },
+     { $group: {
+       _id: "$message",
+       count: { $sum: 1 }
+     }},
+     { $sort: { count: -1 } }
+   ]);
+   ```
+
+3. **Performance Metrics**
+   ```javascript
+   db.access_logs.aggregate([
+     { $group: {
+       _id: "$path",
+       avg_response_time: { $avg: "$response_time" },
+       max_response_time: { $max: "$response_time" }
+     }}
+   ]);
+   ```
+
+## Log Retention
+
+1. **Retention Policy**
+   - Request logs: 30 days
+   - Error logs: 90 days
+   - Access logs: 30 days
+
+2. **Cleanup Process**
+   - Automated daily cleanup
+   - Configurable retention periods
+   - Backup before deletion
+
+## Monitoring
+
+1. **Log Volume**
+   - Track log growth
+   - Monitor storage usage
+   - Alert on anomalies
+
+2. **Error Rates**
+   - Monitor error frequency
+   - Track error types
+   - Alert on spikes
+
+## Best Practices
+
+1. **Logging Guidelines**
+   - Include context
+   - Use appropriate levels
+   - Avoid sensitive data
+
+2. **Performance**
+   - Use async logging
+   - Implement batching
+   - Monitor impact
+
+3. **Security**
+   - Sanitize sensitive data
+   - Implement access controls
+   - Regular audits
+
+## Configuration
+
+Logging can be configured through environment variables:
+
+- `LOG_LEVEL`: Logging level (DEBUG, INFO, WARN, ERROR)
+- `LOG_RETENTION_DAYS`: Number of days to keep logs
+- `LOG_BATCH_SIZE`: Size of log batches
+- `LOG_ENABLED`: Enable/disable logging
+
+## Testing
+
+1. **Unit Tests**
+   - Test log creation
+   - Test error handling
+   - Test retention
+
+2. **Integration Tests**
+   - Test MongoDB interaction
+   - Test log queries
+   - Test cleanup
+
+3. **Performance Tests**
+   - Test under load
+   - Test storage impact
+   - Test query performance

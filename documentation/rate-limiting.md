@@ -41,12 +41,14 @@ The following headers are included in API responses to help clients track their 
 
 - `X-RateLimit-Limit`: The rate limit ceiling for the current user
 - `X-RateLimit-Remaining`: The number of requests left for the current user until the limit is reached
+- `X-RateLimit-Reset`: Unix timestamp when the rate limit will reset
 
 Example:
 
 ```
 X-RateLimit-Limit: 100
 X-RateLimit-Remaining: 95
+X-RateLimit-Reset: 1683072000
 ```
 
 ## Rate Limit Errors
