@@ -23,7 +23,7 @@
     "test:coverage": "bun test --coverage",
     "test:ci": "bun test --coverage",
     "test:timeout": "bun test --timeout 20000",
-    "seed:test-users": "bun run src/scripts/seed-test-users.ts",
+    "seed:test-users": "bun run src/scripts/seed-users.ts",
     "test:load:build": "bun run src/__tests__/load/build.ts",
     "test:load": "bun run seed:test-users && bun run test:load:build && bun run src/__tests__/load/run-load-tests.ts",
     "test:load:report": "bun run seed:test-users && bun run test:load:build && bun run src/__tests__/load/run-load-tests.ts --report",
