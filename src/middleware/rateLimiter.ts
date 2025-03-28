@@ -1,6 +1,6 @@
 import type { Response, NextFunction } from 'express';
 import { getRedisClient } from '../config/redis';
-import { TooManyRequestsError } from '../errors/AppError';
+import { TooManyRequestsError, UnauthorizedError } from '../errors/AppError';
 import type { AuthenticatedRequest } from './authentication';
 import { RATE_LIMIT } from '../config/constants';
 
@@ -12,16 +12,11 @@ export const rateLimiter = async (req: AuthenticatedRequest, res: Response, next
   try {
     // Ensure user is authenticated
     if (!req.user || !req.user.userId) {
-      return next(
-        new TooManyRequestsError(
-          'Authentication required for rate limiting',
-          'RATE_LIMIT_AUTH_REQUIRED'
-        )
-      );
+      return next(new UnauthorizedError('Authentication required', 'Invalid token'));
     }
 
     const userId = req.user.userId;
-    const redisClient = getRedisClient();
+    const redisClient = await getRedisClient();
 
     // Get current date in UTC
     const now = new Date();
@@ -83,4 +78,12 @@ export const rateLimiter = async (req: AuthenticatedRequest, res: Response, next
     // but log the error
     next();
   }
+};
+
+export const createRateLimitKey = (userId: string): string => {
+  // Get current date in UTC and format as YYYY-MM-DD
+  const dateStr = new Date().toISOString().split('T')[0];
+
+  // Create the key using the same format as the middleware
+  return `${RATE_LIMIT.KEY_PREFIX}:${userId}:${dateStr}`;
 };
