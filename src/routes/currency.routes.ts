@@ -33,6 +33,6 @@ router.get(
 );
 
 // GET /api/v1/currency/supported - Get list of supported currencies
-router.get('/supported', authenticate, currencyController.getSupportedCurrencies);
+router.get('/supported', authenticate, rateLimiter, currencyController.getSupportedCurrencies);
 
 export default router;
