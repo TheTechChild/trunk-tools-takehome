@@ -15,9 +15,22 @@ const mongooseOptions = {
 };
 
 /**
- * Connect to MongoDB database
+ * Get MongoDB connection status
  */
-export const connectToDatabase = async (): Promise<void> => {
+export const getDatabaseStatus = (): boolean => {
+  return mongoose.connection.readyState === 1;
+};
+
+/**
+ * Ensure database connection is established
+ * If already connected, this function will do nothing
+ */
+export const ensureDatabaseConnection = async (): Promise<void> => {
+  if (getDatabaseStatus()) {
+    console.info('Already connected to MongoDB');
+    return;
+  }
+
   const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/currency-service';
 
   try {
@@ -25,8 +38,6 @@ export const connectToDatabase = async (): Promise<void> => {
     console.info('Connected to MongoDB successfully');
   } catch (error) {
     console.error('MongoDB connection error:', error);
-    // Gracefully handle MongoDB connection failures
-    // Retry will be handled by mongoose
   }
 };
 
@@ -40,11 +51,4 @@ export const closeDatabaseConnection = async (): Promise<void> => {
   } catch (error) {
     console.error('Error closing MongoDB connection:', error);
   }
-};
-
-/**
- * Get MongoDB connection status
- */
-export const getDatabaseStatus = (): boolean => {
-  return mongoose.connection.readyState === 1;
 };

@@ -2,9 +2,11 @@
 
 This document outlines the available API endpoints for the Currency Conversion Service.
 
-## Base URL
+## Base URLs
 
-All API endpoints are prefixed with `/api/v1/currency`.
+- API endpoints: `/api/v1/currency`
+- Metrics endpoints: `/api/v1/metrics`
+- Health check: `/health`
 
 ## Authentication
 
@@ -150,7 +152,7 @@ Retrieves the list of supported currencies.
 - **URL**: `/api/v1/currency/supported`
 - **Method**: `GET`
 - **Authentication**: Required
-- **Rate Limited**: No
+- **Rate Limited**: Yes
 
 #### Success Response
 
@@ -169,16 +171,41 @@ Retrieves the list of supported currencies.
 
 #### Error Responses
 
-- **Code**: `401 Unauthorized`
-- **Conditions**: Missing or invalid authentication token
+Same error responses as the Convert Currency endpoint.
+
+### Get Metrics
+
+Retrieves application metrics and statistics.
+
+- **URL**: `/api/v1/metrics`
+- **Method**: `GET`
+- **Authentication**: Required
+- **Rate Limited**: Yes
+
+#### Success Response
+
+- **Code**: `200 OK`
 - **Content Example**:
 
 ```json
 {
-  "success": false,
-  "error": {
-    "code": "UNAUTHORIZED",
-    "message": "Authentication required"
+  "success": true,
+  "data": {
+    "total_requests": 1000,
+    "successful_requests": 950,
+    "failed_requests": 50,
+    "average_response_time": 150,
+    "popular_conversions": [
+      {
+        "from": "BTC",
+        "to": "USD",
+        "count": 500
+      }
+    ]
   }
 }
 ```
+
+#### Error Responses
+
+Same error responses as the Convert Currency endpoint.

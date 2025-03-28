@@ -28,7 +28,12 @@ The service uses a custom validation framework that:
 Additional validation:
 
 - Source and target currencies must be different
-- Amount must not exceed the maximum allowed (1000 BTC)
+- Amount must not exceed the maximum allowed:
+  - BTC: 1000 BTC
+  - USD: 1,000,000 USD
+- Decimal precision is enforced:
+  - BTC: 8 decimal places
+  - USD: 2 decimal places
 
 ### Exchange Rates (`/api/v1/currency/rates`)
 
@@ -49,18 +54,56 @@ When validation fails, the API returns a `400 Bad Request` response with detaile
     "details": {
       "errors": {
         "from": "Invalid source currency",
+        "to": "Invalid target currency",
         "amount": "Amount must be a positive number"
-      },
-      "requiredFields": ["to"]
+      }
     }
   }
 }
 ```
 
-The error response includes:
+## Common Validation Errors
 
-- The specific validation error for each invalid field
-- A list of required fields that are missing (if any)
+1. **Currency Validation**
+
+   - Error Code: `UNSUPPORTED_CURRENCY`
+   - Message: "Unsupported currency: {currency}"
+   - Details: Includes list of supported currencies
+
+2. **Amount Validation**
+
+   - Error Code: `INVALID_AMOUNT`
+   - Message: "Amount must be a positive number"
+   - Details: Includes maximum allowed amounts
+
+3. **Currency Pair Validation**
+
+   - Error Code: `INVALID_CURRENCY_PAIR`
+   - Message: "Cannot convert to the same currency"
+   - Details: None
+
+4. **Missing Parameters**
+   - Error Code: `INVALID_PARAMETERS`
+   - Message: "Missing required parameters"
+   - Details: Lists required parameters
+
+## Implementation Details
+
+The validation is implemented using a custom validation framework that:
+
+1. Validates input parameters against defined schemas
+2. Normalizes currency codes to uppercase
+3. Enforces decimal precision based on currency type
+4. Provides detailed error messages for debugging
+5. Logs validation failures for monitoring
+
+## Best Practices
+
+1. Always validate input before processing
+2. Use consistent error response format
+3. Provide clear error messages
+4. Include helpful details in error responses
+5. Log validation failures for monitoring
 
 ## Validator Functions
 

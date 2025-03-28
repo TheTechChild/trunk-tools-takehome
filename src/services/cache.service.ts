@@ -27,7 +27,7 @@ export class CacheService implements CacheServiceInterface {
    */
   async get<T>(key: string): Promise<T | null> {
     try {
-      const redisClient = getRedisClient();
+      const redisClient = await getRedisClient();
       const data = await redisClient.get(key);
 
       if (!data) {
@@ -49,7 +49,7 @@ export class CacheService implements CacheServiceInterface {
    */
   async set<T>(key: string, value: T, options: CacheOptions = {}): Promise<void> {
     try {
-      const redisClient = getRedisClient();
+      const redisClient = await getRedisClient();
       const serializedValue = JSON.stringify(value);
       const ttl = options.ttl || DEFAULT_CACHE_TTL;
 
@@ -67,7 +67,7 @@ export class CacheService implements CacheServiceInterface {
    */
   async del(key: string): Promise<void> {
     try {
-      const redisClient = getRedisClient();
+      const redisClient = await getRedisClient();
       await redisClient.del(key);
       this.metrics.deletes++;
     } catch (error) {
@@ -82,7 +82,7 @@ export class CacheService implements CacheServiceInterface {
    */
   async exists(key: string): Promise<boolean> {
     try {
-      const redisClient = getRedisClient();
+      const redisClient = await getRedisClient();
       const result = await redisClient.exists(key);
       return result === 1;
     } catch (error) {
@@ -96,7 +96,7 @@ export class CacheService implements CacheServiceInterface {
    */
   async ping(): Promise<boolean> {
     try {
-      const redisClient = getRedisClient();
+      const redisClient = await getRedisClient();
       const result = await redisClient.ping();
       return result === 'PONG';
     } catch {

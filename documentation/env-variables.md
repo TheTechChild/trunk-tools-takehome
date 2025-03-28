@@ -6,7 +6,7 @@ The Currency Conversion Service requires the following environment variables:
 
 ### Application Configuration
 
-- `NODE_ENV`: Application environment (development, production, test)
+- `NODE_ENV`: Application environment (local, production)
 - `PORT`: Port number for the HTTP server (default: 8000)
 
 ### MongoDB Configuration
@@ -45,7 +45,7 @@ The Currency Conversion Service requires the following environment variables:
 
 ```
 # Application
-NODE_ENV=development
+NODE_ENV=local
 PORT=8000
 
 # MongoDB
@@ -76,7 +76,7 @@ COINBASE_API_URL=https://api.coinbase.com/v2
 ### Development
 
 ```
-NODE_ENV=development
+NODE_ENV=local
 MONGODB_URI=mongodb://localhost:27017/currency-service
 REDIS_URI=redis://localhost:6379
 ```
@@ -84,17 +84,7 @@ REDIS_URI=redis://localhost:6379
 ### Docker Development
 
 ```
-NODE_ENV=development
+NODE_ENV=production
 MONGODB_URI=mongodb://mongodb:27017/currency-service
 REDIS_URI=redis://redis:6379
-```
-
-### Production
-
-```
-NODE_ENV=production
-MONGODB_URI=mongodb://user:password@production-db:27017/currency-service?authSource=admin
-REDIS_URI=redis://:password@production-redis:6379
-RATE_LIMIT_WEEKDAY=50
-RATE_LIMIT_WEEKEND=100
 ```
