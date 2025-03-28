@@ -13,7 +13,7 @@ const parseNumericEnv = (value: string | undefined, defaultValue: number): numbe
 export const COINBASE_API_URL = process.env.COINBASE_API_URL || 'https://api.coinbase.com/v2';
 
 // Supported currencies
-export const SUPPORTED_CURRENCIES = ['BTC', 'USD'];
+export const SUPPORTED_CURRENCIES = ['BTC', 'ETH', 'EUR', 'USD'];
 
 // Rate limiting constants
 export const RATE_LIMIT = {
