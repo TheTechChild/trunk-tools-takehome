@@ -32,7 +32,7 @@ export class CoinbaseService {
    */
   async getExchangeRate(fromCurrency: string, toCurrency: string): Promise<ExchangeRateData> {
     const cacheKey = this.getExchangeRateCacheKey(fromCurrency, toCurrency);
-    const redisClient = getRedisClient();
+    const redisClient = await getRedisClient();
 
     try {
       // Try to get rate from Redis cache first
