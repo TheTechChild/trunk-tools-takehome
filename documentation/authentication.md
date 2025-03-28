@@ -9,11 +9,13 @@ The service uses Bearer token authentication to secure API endpoints. All authen
 ## Authentication Flow
 
 1. **Token Format**
+
    ```
    Authorization: Bearer <jwt_token>
    ```
 
 2. **Token Structure**
+
    ```json
    {
      "sub": "user123",
@@ -34,6 +36,7 @@ The service uses Bearer token authentication to secure API endpoints. All authen
 ### Token Validation
 
 1. **Validation Steps**
+
    ```typescript
    // Example validation flow
    const token = req.headers.authorization?.split(' ')[1];
@@ -62,6 +65,7 @@ The service uses Bearer token authentication to secure API endpoints. All authen
 ### User ID Requirements
 
 1. **Format**
+
    - Must be a non-empty string
    - Maximum length: 64 characters
    - Alphanumeric characters only
@@ -77,6 +81,7 @@ The service uses Bearer token authentication to secure API endpoints. All authen
 ## Error Responses
 
 ### Missing Token
+
 ```json
 {
   "success": false,
@@ -91,6 +96,7 @@ The service uses Bearer token authentication to secure API endpoints. All authen
 ```
 
 ### Invalid Token
+
 ```json
 {
   "success": false,
@@ -105,6 +111,7 @@ The service uses Bearer token authentication to secure API endpoints. All authen
 ```
 
 ### Expired Token
+
 ```json
 {
   "success": false,
@@ -121,11 +128,13 @@ The service uses Bearer token authentication to secure API endpoints. All authen
 ## Security Considerations
 
 1. **Token Storage**
+
    - Tokens are not stored server-side
    - Client responsible for secure storage
    - HTTPS required for all requests
 
 2. **Token Lifetime**
+
    - Default expiration: 24 hours
    - Configurable via environment variables
    - Refresh token mechanism available
@@ -146,11 +155,13 @@ Authentication can be configured through environment variables:
 ## Best Practices
 
 1. **Client Implementation**
+
    - Store tokens securely
    - Implement token refresh
    - Handle authentication errors
 
 2. **Service Implementation**
+
    - Validate tokens early
    - Use secure session management
    - Implement proper error handling
@@ -163,11 +174,13 @@ Authentication can be configured through environment variables:
 ## Testing
 
 1. **Unit Tests**
+
    - Test token validation
    - Test error handling
    - Test user ID validation
 
 2. **Integration Tests**
+
    - Test authentication flow
    - Test protected endpoints
    - Test error scenarios

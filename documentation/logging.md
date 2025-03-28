@@ -149,6 +149,7 @@ interface IAccessLog {
 ### Request Logging
 
 1. **Non-Blocking Logging**
+
    ```typescript
    // Example non-blocking logging
    const logData = {
@@ -158,12 +159,13 @@ interface IAccessLog {
      amount: amount,
      converted_amount: convertedAmount,
      exchange_rate: exchangeRate,
-     timestamp: new Date()
+     timestamp: new Date(),
    };
 
    // Log asynchronously without awaiting
-   requestLogRepository.create(logData)
-     .catch(error => console.error('Failed to log request:', error));
+   requestLogRepository
+     .create(logData)
+     .catch((error) => console.error('Failed to log request:', error));
    ```
 
 2. **Performance Considerations**
@@ -174,6 +176,7 @@ interface IAccessLog {
 ### Error Logging
 
 1. **Error Capture**
+
    ```typescript
    // Example error logging
    try {
@@ -186,8 +189,8 @@ interface IAccessLog {
        stack: error.stack,
        context: {
          operation: 'currency_conversion',
-         user_id: userId
-       }
+         user_id: userId,
+       },
      });
      throw error;
    }
@@ -204,12 +207,14 @@ interface IAccessLog {
 ### MongoDB Collections
 
 1. **request_logs**
+
    - Indexes:
      - `user_id`
      - `timestamp`
      - `{user_id, timestamp}`
 
 2. **error_logs**
+
    - Indexes:
      - `timestamp`
      - `level`
@@ -226,43 +231,52 @@ interface IAccessLog {
 ### Common Queries
 
 1. **User Activity**
+
    ```javascript
    db.request_logs.aggregate([
-     { $match: { user_id: "user123" } },
-     { $group: {
-       _id: null,
-       total_requests: { $sum: 1 },
-       total_amount: { $sum: "$amount" }
-     }}
+     { $match: { user_id: 'user123' } },
+     {
+       $group: {
+         _id: null,
+         total_requests: { $sum: 1 },
+         total_amount: { $sum: '$amount' },
+       },
+     },
    ]);
    ```
 
 2. **Error Analysis**
+
    ```javascript
    db.error_logs.aggregate([
-     { $match: { level: "ERROR" } },
-     { $group: {
-       _id: "$message",
-       count: { $sum: 1 }
-     }},
-     { $sort: { count: -1 } }
+     { $match: { level: 'ERROR' } },
+     {
+       $group: {
+         _id: '$message',
+         count: { $sum: 1 },
+       },
+     },
+     { $sort: { count: -1 } },
    ]);
    ```
 
 3. **Performance Metrics**
    ```javascript
    db.access_logs.aggregate([
-     { $group: {
-       _id: "$path",
-       avg_response_time: { $avg: "$response_time" },
-       max_response_time: { $max: "$response_time" }
-     }}
+     {
+       $group: {
+         _id: '$path',
+         avg_response_time: { $avg: '$response_time' },
+         max_response_time: { $max: '$response_time' },
+       },
+     },
    ]);
    ```
 
 ## Log Retention
 
 1. **Retention Policy**
+
    - Request logs: 30 days
    - Error logs: 90 days
    - Access logs: 30 days
@@ -275,6 +289,7 @@ interface IAccessLog {
 ## Monitoring
 
 1. **Log Volume**
+
    - Track log growth
    - Monitor storage usage
    - Alert on anomalies
@@ -287,11 +302,13 @@ interface IAccessLog {
 ## Best Practices
 
 1. **Logging Guidelines**
+
    - Include context
    - Use appropriate levels
    - Avoid sensitive data
 
 2. **Performance**
+
    - Use async logging
    - Implement batching
    - Monitor impact
@@ -313,11 +330,13 @@ Logging can be configured through environment variables:
 ## Testing
 
 1. **Unit Tests**
+
    - Test log creation
    - Test error handling
    - Test retention
 
 2. **Integration Tests**
+
    - Test MongoDB interaction
    - Test log queries
    - Test cleanup

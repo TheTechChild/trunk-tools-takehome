@@ -35,15 +35,15 @@ interface IRequestLog {
 
 #### Field Descriptions
 
-| Field            | Type   | Required | Description                    |
-|------------------|--------|----------|--------------------------------|
-| user_id          | string | Yes      | ID of the user making request  |
-| from_currency    | string | Yes      | Source currency code           |
-| to_currency      | string | Yes      | Target currency code           |
-| amount           | number | Yes      | Original amount to convert     |
-| converted_amount | number | Yes      | Result of conversion           |
-| exchange_rate    | number | Yes      | Rate used for conversion       |
-| timestamp        | Date   | Yes      | When the request was made      |
+| Field            | Type   | Required | Description                   |
+| ---------------- | ------ | -------- | ----------------------------- |
+| user_id          | string | Yes      | ID of the user making request |
+| from_currency    | string | Yes      | Source currency code          |
+| to_currency      | string | Yes      | Target currency code          |
+| amount           | number | Yes      | Original amount to convert    |
+| converted_amount | number | Yes      | Result of conversion          |
+| exchange_rate    | number | Yes      | Rate used for conversion      |
+| timestamp        | Date   | Yes      | When the request was made     |
 
 ## Request Logging System
 
@@ -54,11 +54,13 @@ The request logging system is designed to track all currency conversion requests
 ### Implementation Details
 
 1. **Non-Blocking Logging**
+
    - Logging is performed asynchronously
    - Does not impact API response time
    - Failed logs are caught and logged to console
 
 2. **Logging Process**
+
    ```typescript
    // Example logging flow
    try {
@@ -69,7 +71,7 @@ The request logging system is designed to track all currency conversion requests
        amount: amount,
        converted_amount: convertedAmount,
        exchange_rate: exchangeRate,
-       timestamp: new Date()
+       timestamp: new Date(),
      });
    } catch (error) {
      console.error('Failed to log conversion request:', error);
@@ -84,39 +86,44 @@ The request logging system is designed to track all currency conversion requests
 ### Query Examples
 
 1. **Get User's Conversion History**
+
    ```javascript
-   db.request_logs.find({ user_id: "user123" })
-     .sort({ timestamp: -1 })
-     .limit(10);
+   db.request_logs.find({ user_id: 'user123' }).sort({ timestamp: -1 }).limit(10);
    ```
 
 2. **Get Popular Currency Pairs**
+
    ```javascript
    db.request_logs.aggregate([
-     { $group: {
-       _id: { from: "$from_currency", to: "$to_currency" },
-       count: { $sum: 1 }
-     }},
-     { $sort: { count: -1 }},
-     { $limit: 10 }
+     {
+       $group: {
+         _id: { from: '$from_currency', to: '$to_currency' },
+         count: { $sum: 1 },
+       },
+     },
+     { $sort: { count: -1 } },
+     { $limit: 10 },
    ]);
    ```
 
 3. **Get Conversion Statistics**
    ```javascript
    db.request_logs.aggregate([
-     { $group: {
-       _id: null,
-       total_requests: { $sum: 1 },
-       avg_amount: { $avg: "$amount" },
-       avg_rate: { $avg: "$exchange_rate" }
-     }}
+     {
+       $group: {
+         _id: null,
+         total_requests: { $sum: 1 },
+         avg_amount: { $avg: '$amount' },
+         avg_rate: { $avg: '$exchange_rate' },
+       },
+     },
    ]);
    ```
 
 ## Data Retention
 
 1. **Log Retention Policy**
+
    - Default retention: 30 days
    - Configurable via environment variables
    - Automatic cleanup of expired logs
@@ -129,6 +136,7 @@ The request logging system is designed to track all currency conversion requests
 ## Monitoring and Maintenance
 
 1. **Health Checks**
+
    - Database connection monitoring
    - Index usage statistics
    - Query performance metrics
@@ -141,6 +149,7 @@ The request logging system is designed to track all currency conversion requests
 ## Error Handling
 
 1. **Connection Errors**
+
    - Automatic retry mechanism
    - Fallback to cached data
    - Alert system for persistent issues

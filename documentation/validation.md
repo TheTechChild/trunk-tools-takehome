@@ -65,16 +65,19 @@ When validation fails, the API returns a `400 Bad Request` response with detaile
 ## Common Validation Errors
 
 1. **Currency Validation**
+
    - Error Code: `UNSUPPORTED_CURRENCY`
    - Message: "Unsupported currency: {currency}"
    - Details: Includes list of supported currencies
 
 2. **Amount Validation**
+
    - Error Code: `INVALID_AMOUNT`
    - Message: "Amount must be a positive number"
    - Details: Includes maximum allowed amounts
 
 3. **Currency Pair Validation**
+
    - Error Code: `INVALID_CURRENCY_PAIR`
    - Message: "Cannot convert to the same currency"
    - Details: None

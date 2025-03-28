@@ -63,11 +63,13 @@ These metrics are available via the `/api/v1/metrics/cache` endpoint.
 ### Cache Keys
 
 1. **Exchange Rate Cache**
+
    - Key Format: `exchange_rate:{FROM}-{TO}`
    - TTL: 600 seconds (10 minutes)
    - Value Format: JSON string containing rate and timestamp
 
 2. **Rate Limit Cache**
+
    - Key Format: `rate_limit:{user_id}`
    - TTL: 86400 seconds (24 hours)
    - Value Format: JSON string containing count and reset time
@@ -103,6 +105,7 @@ return rateData;
 ### Cache Invalidation
 
 1. **Automatic Invalidation**
+
    - Keys expire automatically after TTL
    - No manual cleanup required
    - Redis handles memory management
@@ -116,6 +119,7 @@ return rateData;
 ## Error Handling
 
 1. **Cache Miss**
+
    - Graceful fallback to API
    - No impact on service availability
    - Logged for monitoring
@@ -128,6 +132,7 @@ return rateData;
 ## Performance Considerations
 
 1. **Memory Usage**
+
    - Monitor Redis memory usage
    - Set appropriate TTL values
    - Implement eviction policies
@@ -140,6 +145,7 @@ return rateData;
 ## Monitoring
 
 1. **Cache Statistics**
+
    - Hit rate monitoring
    - Memory usage tracking
    - Latency measurements
@@ -152,11 +158,13 @@ return rateData;
 ## Best Practices
 
 1. **Key Design**
+
    - Use consistent naming
    - Include version prefix
    - Keep keys short
 
 2. **Value Design**
+
    - Serialize efficiently
    - Include metadata
    - Use appropriate TTL
@@ -178,11 +186,13 @@ Caching can be configured through environment variables:
 ## Testing
 
 1. **Unit Tests**
+
    - Test cache operations
    - Test error handling
    - Test TTL behavior
 
 2. **Integration Tests**
+
    - Test Redis connection
    - Test cache invalidation
    - Test concurrent access

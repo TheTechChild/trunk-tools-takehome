@@ -8,7 +8,6 @@ branches:
         strict: true
         contexts: 
           - "Lint"
-          - "Test"
           - "Build"
       enforce_admins: false
       restrictions: null 

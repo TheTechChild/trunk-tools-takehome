@@ -87,11 +87,13 @@ bun run dev
 A Postman collection is available to help you test the API endpoints. You can find it in the `documentation/` directory:
 
 1. Import the collection:
+
    - Open Postman
    - Click "Import"
    - Select `documentation/Trunk Tools POC.postman_collection.json`
 
 2. Set up environment variables:
+
    - Create a new environment in Postman
    - Add the following variables:
      - `domain`: Set to `localhost:8000` for local development
@@ -111,33 +113,40 @@ A Postman collection is available to help you test the API endpoints. You can fi
 The following environment variables are required:
 
 ### Application Configuration
+
 - `NODE_ENV`: Application environment (local, production)
 - `PORT`: Port number for the HTTP server (default: 8000)
 
 ### MongoDB Configuration
+
 - `MONGODB_URI`: MongoDB connection string
   - Default: `mongodb://localhost:27017/currency-service`
   - Docker: `mongodb://mongodb:27017/currency-service`
 
 ### Redis Configuration
+
 - `REDIS_URI`: Redis connection string
   - Default: `redis://localhost:6379`
   - Docker: `redis://redis:6379`
 
 ### Rate Limiting
+
 - `RATE_LIMIT_WINDOW_MS`: Time window for rate limiting (default: 60000)
 - `RATE_LIMIT_MAX_REQUESTS`: Maximum requests per window (default: 100)
 - `RATE_LIMIT_WEEKDAY`: Maximum requests per day on weekdays (default: 100)
 - `RATE_LIMIT_WEEKEND`: Maximum requests per day on weekends (default: 200)
 
 ### Precision Settings
+
 - `DECIMAL_PRECISION_BTC`: Number of decimal places for BTC (default: 8)
 - `DECIMAL_PRECISION_USD`: Number of decimal places for USD (default: 2)
 
 ### Maximum Amounts
+
 - `MAX_AMOUNT_BTC`: Maximum BTC amount for conversions (default: 1000)
 
 ### Coinbase API
+
 - `COINBASE_API_URL`: Base URL for Coinbase API (default: https://api.coinbase.com/v2)
 
 ## Project Structure
